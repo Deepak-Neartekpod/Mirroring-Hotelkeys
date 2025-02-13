@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui-elements/button";
-import Data from "@/data/data";
+import data from "@/data/data";
 
 export default function Availability() {
   // Current date/time
@@ -16,7 +16,10 @@ export default function Availability() {
   };
 
   // Display string for the current date (header)
-  const currentDateString = currentDate.toLocaleDateString("en-US", dateFormatOptions);
+  const currentDateString = currentDate.toLocaleDateString(
+    "en-US",
+    dateFormatOptions,
+  );
 
   // Check In date is today
   const checkInDateString = currentDateString;
@@ -24,7 +27,10 @@ export default function Availability() {
   // Check Out date is tomorrow
   const checkOutDate = new Date(currentDate.getTime());
   checkOutDate.setDate(checkOutDate.getDate() + 1);
-  const checkOutDateString = checkOutDate.toLocaleDateString("en-US", dateFormatOptions);
+  const checkOutDateString = checkOutDate.toLocaleDateString(
+    "en-US",
+    dateFormatOptions,
+  );
 
   return (
     <div className="bg-gray-100 p-6 dark:bg-gray-900">
@@ -48,7 +54,7 @@ export default function Availability() {
 
       {/* Room Availability */}
       <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-3">
-        {Data.map((room, index) => (
+        {data.rooms.map((room, index) => (
           <div
             key={index}
             className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700"

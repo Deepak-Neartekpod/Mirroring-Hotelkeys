@@ -22,7 +22,6 @@ export const NAV_DATA: Section[] = [
   {
     label: "Dashboard",
     items: [
-      
       {
         title: "Departures",
         url: "/departures",
@@ -42,11 +41,6 @@ export const NAV_DATA: Section[] = [
       {
         title: "Availability",
         url: "/availability",
-        icon: Icons.Table,
-      },
-      {
-        title: "More",
-        url: "/more",
         icon: Icons.Table,
       },
     ],
