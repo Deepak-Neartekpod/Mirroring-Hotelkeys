@@ -29,7 +29,7 @@ const WalkIn = () => {
 
         {/* Card 2: Assign Room */}
         <div className="rounded-lg bg-white p-4 shadow-md">
-          <h2 className="text-xl font-semibold">Assign Room 🏠</h2>
+          <h2 className="text-xl font-semibold">Assign Room</h2>
           <select
             value={room}
             onChange={(e) => setRoom(e.target.value)}
