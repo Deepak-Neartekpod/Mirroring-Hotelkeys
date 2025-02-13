@@ -31,12 +31,12 @@ const Dashboard = () => {
 
         <ShowcaseSection title="Bookings">
           <div className="grid grid-cols-2 gap-4">
-            <div className="rounded-lg bg-white p-4 shadow-md">
+            <a href="/checkin" className="rounded-lg bg-white p-4 shadow-md block cursor-pointer">
               <h2 className="text-xl font-semibold">
                 {data.bookings.arrivals}
               </h2>
               <p>Arrivals</p>
-            </div>
+            </a>
             <div className="rounded-lg bg-white p-4 shadow-md">
               <h2 className="text-xl font-semibold">
                 {data.bookings.noShowLateCancel}
