@@ -87,31 +87,16 @@ const Dashboard = () => {
           </div>
         </ShowcaseSection>
       </div>
-      <div className="mt-6 flex flex-col gap-4 md:flex-row">
-        <Button
-          label="Walk-In"
-          className="rounded-lg border-2 border-primary bg-primary px-4 py-2 text-white hover:bg-opacity-80"
-        />
-        <Button
-          label="New Booking"
-          className="rounded-lg border-2 border-primary bg-primary px-4 py-2 text-white hover:bg-opacity-80"
-        />
-        <Button
-          label="End Shift"
-          className="rounded-lg border-2 border-primary bg-primary px-4 py-2 text-white hover:bg-opacity-80"
-        />
-        <Button
-          label="Search Reservation"
-          className="rounded-lg border-2 border-primary bg-primary px-4 py-2 text-white hover:bg-opacity-80"
-        />
-        <Button
-          label="Group Master"
-          className="rounded-lg border-2 border-primary bg-primary px-4 py-2 text-white hover:bg-opacity-80"
-        />
-        <Button
-          label="Grid View & Floor Plan"
-          className="rounded-lg border-2 border-primary bg-primary px-4 py-2 text-white hover:bg-opacity-80"
-        />
+      <div className="mt-7 grid grid-cols-1 gap-4 rounded-lg border-2 md:grid-cols-3">
+        <Button label="Walk-In" />
+        <Button label="New Booking" />
+        <Button label="Group Master" />
+      </div>
+
+      <div className="mt-6 grid grid-cols-1 gap-4 rounded-lg border-2 md:grid-cols-3">
+        <Button label="End Shift" />
+        <Button label="Search Reservation" />
+        <Button label="Grid View & Floor Plan" />
       </div>
     </div>
   );
