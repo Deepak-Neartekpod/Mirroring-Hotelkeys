@@ -27,7 +27,6 @@ export function Header() {
         <header className="border-b">
           <div className="container mx-auto flex items-center justify-between px-4 py-3">
             <div className="flex items-center gap-4">
-              <Home className="h-8 w-8 text-sky-500" />
               <button className="p-2">
                 <Clock className="h-5 w-5" />
               </button>

@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui-elements/button";
 import { ShowcaseSection } from "@/components/Layouts/showcase-section";
+import Data from "@/data/data";
 
 const Dashboard = () => {
+  console.log("fddfs", Data);
   return (
     <div className="bg-gray-100 p-6 dark:bg-gray-900">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -17,11 +19,11 @@ const Dashboard = () => {
             </div>
             <div className="rounded-lg bg-white p-4 shadow-md">
               <h2 className="text-xl font-semibold">0</h2>
-              <p>New Box 1</p>
+              <p>Dirty Rooms</p>
             </div>
             <div className="rounded-lg bg-white p-4 shadow-md">
               <h2 className="text-xl font-semibold">0</h2>
-              <p>New Box 2</p>
+              <p>Ready Rooms</p>
             </div>
           </div>
         </ShowcaseSection>
@@ -38,11 +40,11 @@ const Dashboard = () => {
             </div>
             <div className="rounded-lg bg-white p-4 shadow-md">
               <h2 className="text-xl font-semibold">0</h2>
-              <p>New Box 1</p>
+              <p>Groups</p>
             </div>
             <div className="rounded-lg bg-white p-4 shadow-md">
               <h2 className="text-xl font-semibold">0</h2>
-              <p>New Box 2</p>
+              <p>Today Booked</p>
             </div>
           </div>
         </ShowcaseSection>
@@ -59,11 +61,11 @@ const Dashboard = () => {
             </div>
             <div className="rounded-lg bg-white p-4 shadow-md">
               <h2 className="text-xl font-semibold">0</h2>
-              <p>New Box 1</p>
+              <p>Sold</p>
             </div>
             <div className="rounded-lg bg-white p-4 shadow-md">
               <h2 className="text-xl font-semibold">0</h2>
-              <p>New Box 2</p>
+              <p>Available</p>
             </div>
           </div>
         </ShowcaseSection>
