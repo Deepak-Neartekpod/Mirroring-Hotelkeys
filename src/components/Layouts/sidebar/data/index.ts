@@ -29,13 +29,23 @@ export const NAV_DATA: Section[] = [
         items: [],
       },
       {
-        title: "In House",
-        url: "/inhouse",
+        title: "Check-In",
+        url: "/checkin",
         icon: Icons.Table,
       },
       {
-        title: "Arrivals",
-        url: "/arrivals",
+        title: "Walk-In",
+        url: "/walkin",
+        icon: Icons.Table,
+      },
+      {
+        title: "Check-Out",
+        url: "/checkout",
+        icon: Icons.Table,
+      },
+      {
+        title: "In House",
+        url: "/inhouse",
         icon: Icons.Table,
       },
       {
