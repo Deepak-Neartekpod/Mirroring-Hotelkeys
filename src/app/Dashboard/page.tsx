@@ -31,7 +31,10 @@ const Dashboard = () => {
 
         <ShowcaseSection title="Bookings">
           <div className="grid grid-cols-2 gap-4">
-            <a href="/checkin" className="rounded-lg bg-white p-4 shadow-md block cursor-pointer">
+            <a
+              href="/checkin"
+              className="block cursor-pointer rounded-lg bg-white p-4 shadow-md"
+            >
               <h2 className="text-xl font-semibold">
                 {data.bookings.arrivals}
               </h2>
@@ -80,14 +83,8 @@ const Dashboard = () => {
         </ShowcaseSection>
       </div>
       <div className="mt-7 grid grid-cols-1 gap-4 rounded-lg border-2 md:grid-cols-3">
-        <Button label="Walk-In" />
         <Button label="New Booking" />
         <Button label="Group Master" />
-      </div>
-
-      <div className="mt-6 grid grid-cols-1 gap-4 rounded-lg border-2 md:grid-cols-3">
-        <Button label="End Shift" />
-        <Button label="Search Reservation" />
         <Button label="Grid View & Floor Plan" />
       </div>
     </div>
