@@ -8,6 +8,14 @@ import { useSidebarContext } from "../sidebar/sidebar-context";
 export function Header() {
   const { isMobile } = useSidebarContext();
 
+  // Get current date
+  const currentDate = new Date().toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+
   return (
     <header className="sticky top-0 z-30 flex items-center justify-between border-b border-stroke bg-white px-4 py-5 shadow-1 dark:border-stroke-dark dark:bg-gray-dark md:px-5 2xl:px-10">
       {isMobile && (
@@ -32,11 +40,10 @@ export function Header() {
               </button>
             </div>
             <div className="flex items-center gap-4">
-              <span className="text-gray-600">Sat, Aug 14, 2021</span>
+              <span className="text-gray-600">{currentDate}</span>
               <button className="rounded-md px-4 py-2 text-gray-600 hover:bg-gray-100">
                 Helpdesk
               </button>
-              <span className="text-gray-600">2.0 min ago</span>
               <button className="rounded-md p-2 hover:bg-gray-100">
                 <Users className="h-5 w-5" />
               </button>

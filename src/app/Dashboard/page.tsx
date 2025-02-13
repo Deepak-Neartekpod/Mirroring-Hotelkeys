@@ -1,28 +1,35 @@
 import { Button } from "@/components/ui-elements/button";
 import { ShowcaseSection } from "@/components/Layouts/showcase-section";
-import Data from "@/data/data";
+import data from "@/data/data";
 
 const Dashboard = () => {
-  console.log("fddfs", Data);
+  console.log("jfsdkcxf", data);
+
   return (
     <div className="bg-gray-100 p-6 dark:bg-gray-900">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <ShowcaseSection title="House">
           <div className="grid grid-cols-2 gap-4">
             <div className="rounded-lg bg-white p-4 shadow-md">
-              <h2 className="text-xl font-semibold">5</h2>
+              <h2 className="text-xl font-semibold">{data[0].house.inHouse}</h2>
               <p>In House</p>
             </div>
             <div className="rounded-lg bg-white p-4 shadow-md">
-              <h2 className="text-xl font-semibold">0</h2>
+              <h2 className="text-xl font-semibold">
+                {data[0].house.departures}
+              </h2>
               <p>Departures</p>
             </div>
             <div className="rounded-lg bg-white p-4 shadow-md">
-              <h2 className="text-xl font-semibold">0</h2>
+              <h2 className="text-xl font-semibold">
+                {data[0].house.dirtyRooms}
+              </h2>
               <p>Dirty Rooms</p>
             </div>
             <div className="rounded-lg bg-white p-4 shadow-md">
-              <h2 className="text-xl font-semibold">0</h2>
+              <h2 className="text-xl font-semibold">
+                {data[0].house.readyRooms}
+              </h2>
               <p>Ready Rooms</p>
             </div>
           </div>
@@ -31,19 +38,27 @@ const Dashboard = () => {
         <ShowcaseSection title="Bookings">
           <div className="grid grid-cols-2 gap-4">
             <div className="rounded-lg bg-white p-4 shadow-md">
-              <h2 className="text-xl font-semibold">5</h2>
+              <h2 className="text-xl font-semibold">
+                {data[0].bookings.arrivals}
+              </h2>
               <p>Arrivals</p>
             </div>
             <div className="rounded-lg bg-white p-4 shadow-md">
-              <h2 className="text-xl font-semibold">0</h2>
+              <h2 className="text-xl font-semibold">
+                {data[0].bookings.noShowLateCancel}
+              </h2>
               <p>No Show/Late Cancel</p>
             </div>
             <div className="rounded-lg bg-white p-4 shadow-md">
-              <h2 className="text-xl font-semibold">0</h2>
+              <h2 className="text-xl font-semibold">
+                {data[0].bookings.groups}
+              </h2>
               <p>Groups</p>
             </div>
             <div className="rounded-lg bg-white p-4 shadow-md">
-              <h2 className="text-xl font-semibold">0</h2>
+              <h2 className="text-xl font-semibold">
+                {data[0].bookings.todayBooked}
+              </h2>
               <p>Today Booked</p>
             </div>
           </div>
@@ -52,31 +67,35 @@ const Dashboard = () => {
         <ShowcaseSection title="Availability">
           <div className="grid grid-cols-2 gap-4">
             <div className="rounded-lg bg-white p-4 shadow-md">
-              <h2 className="text-xl font-semibold">51</h2>
+              <h2 className="text-xl font-semibold">
+                {data[0].availability.totalRooms}
+              </h2>
               <p>Total Rooms</p>
             </div>
             <div className="rounded-lg bg-white p-4 shadow-md">
-              <h2 className="text-xl font-semibold">0</h2>
+              <h2 className="text-xl font-semibold">
+                {data[0].availability.sold}
+              </h2>
               <p>Sold</p>
             </div>
             <div className="rounded-lg bg-white p-4 shadow-md">
-              <h2 className="text-xl font-semibold">0</h2>
-              <p>Sold</p>
-            </div>
-            <div className="rounded-lg bg-white p-4 shadow-md">
-              <h2 className="text-xl font-semibold">0</h2>
+              <h2 className="text-xl font-semibold">
+                {data[0].availability.available}
+              </h2>
               <p>Available</p>
             </div>
           </div>
         </ShowcaseSection>
       </div>
-
-      <div className="mt-6 flex flex-col gap-4 md:flex-row">
+      <div className="mt-7 grid grid-cols-1 gap-4 rounded-lg border-2 md:grid-cols-3">
         <Button label="Walk-In" />
         <Button label="New Booking" />
+        <Button label="Group Master" />
+      </div>
+
+      <div className="mt-6 grid grid-cols-1 gap-4 rounded-lg border-2 md:grid-cols-3">
         <Button label="End Shift" />
         <Button label="Search Reservation" />
-        <Button label="Group Master" />
         <Button label="Grid View & Floor Plan" />
       </div>
     </div>
