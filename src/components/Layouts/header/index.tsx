@@ -1,6 +1,6 @@
 "use client";
 
-import { SearchIcon } from "@/assets/icons";
+import { Home, Clock, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSidebarContext } from "../sidebar/sidebar-context";
@@ -23,9 +23,27 @@ export function Header() {
       )}
 
       <div className="max-xl:hidden">
-        <h1 className="mb-0.5 text-heading-5 font-bold text-dark dark:text-white">
-          Dashboard
-        </h1>
+        {/* Top Navigation */}
+        <header className="border-b">
+          <div className="container mx-auto flex items-center justify-between px-4 py-3">
+            <div className="flex items-center gap-4">
+              <Home className="h-8 w-8 text-sky-500" />
+              <button className="p-2">
+                <Clock className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="text-gray-600">Sat, Aug 14, 2021</span>
+              <button className="rounded-md px-4 py-2 text-gray-600 hover:bg-gray-100">
+                Helpdesk
+              </button>
+              <span className="text-gray-600">2.0 min ago</span>
+              <button className="rounded-md p-2 hover:bg-gray-100">
+                <Users className="h-5 w-5" />
+              </button>
+            </div>
+          </div>
+        </header>
       </div>
 
       <div className="flex flex-1 items-center justify-end gap-2 min-[375px]:gap-4"></div>
