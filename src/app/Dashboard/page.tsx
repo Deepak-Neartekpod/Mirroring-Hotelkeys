@@ -6,7 +6,7 @@ const Dashboard = () => {
   console.log("jfsdkcxf", data);
 
   return (
-    <div className="bg-gray-100 p-6 dark:bg-gray-900">
+    <div className="bg-gray-100 p-5 dark:bg-gray-900">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <ShowcaseSection title="House">
           <div className="grid grid-cols-2 gap-4">
