@@ -22,21 +22,31 @@ export const NAV_DATA: Section[] = [
   {
     label: "Dashboard",
     items: [
+      
       {
-        title: "Calendar",
-        url: "/calendar",
-        icon: Icons.Calendar,
-        items: [],
-      },
-      {
-        title: "Profile",
-        url: "/profile",
+        title: "Departures",
+        url: "/departures",
         icon: Icons.User,
         items: [],
       },
       {
-        title: "Tables",
-        url: "/tables",
+        title: "In House",
+        url: "/inhouse",
+        icon: Icons.Table,
+      },
+      {
+        title: "Arrivals",
+        url: "/arrivals",
+        icon: Icons.Table,
+      },
+      {
+        title: "Availability",
+        url: "/availability",
+        icon: Icons.Table,
+      },
+      {
+        title: "More",
+        url: "/more",
         icon: Icons.Table,
       },
     ],
