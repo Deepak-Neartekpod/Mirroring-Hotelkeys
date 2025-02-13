@@ -4,19 +4,23 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui-elements/button";
 import { bookingData } from "@/data/data"; // Adjust the path as necessary
 
+const paymentMethods = ["Credit Card", "Debit Card", "PayPal"]; // Define available payment methods
+
 export default function CheckIn() {
   const [name, setName] = useState(bookingData.name || "");
   const [bookingId, setBookingId] = useState("");
   const [reservationNumber, setReservationNumber] = useState("");
   const [confirmationNumber, setConfirmationNumber] = useState("");
   const [room, setRoom] = useState("");
-  const [roomType, setRoomType] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState(bookingData.paymentMethod || "Credit Card");
-  const [checkInDate, setCheckInDate] = useState("");
-  const [profileDetails, setProfileDetails] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState(paymentMethods[0]); // Initialize with the first method
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
 
   const handleCheckIn = () => {
     // Handle check-in logic here
+  };
+
+  const handleAuthorizePayment = () => {
+    setShowPaymentForm(true);
   };
 
   return (
@@ -114,36 +118,69 @@ export default function CheckIn() {
           <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Room Type</h2>
           <div className="mt-4">
             <select
-              value={roomType}
-              onChange={(e) => setRoomType(e.target.value)}
+              value={paymentMethod}
+              onChange={(e) => setPaymentMethod(e.target.value)} // Update payment method on change
               className="w-full rounded-md border border-gray-300 p-2 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
             >
-              <option value="">Select room type</option>
-              <option value="Single">Single</option>
-              <option value="Double">Double</option>
-              <option value="Suite">Suite</option>
+              {paymentMethods.map((method) => (
+                <option key={method} value={method}>
+                  {method}
+                </option>
+              ))}
             </select>
+            <Button
+              label="Authorize Payment"
+              onClick={handleAuthorizePayment}
+            />
           </div>
         </div>
 
         {/* Payment Method */}
         <div className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Payment Method</h2>
-          <div className="mt-4 space-y-2">
-            <select
-              value={paymentMethod}
-              onChange={(e) => setPaymentMethod(e.target.value)}
-              className="w-full rounded-md border border-gray-300 p-2 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
-            >
-              <option value="Credit Card">Credit Card</option>
-              <option value="Cash">Cash</option>
-              <option value="PayPal">PayPal</option>
-            </select>
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+            Issue Key
+          </h2>
+          <div className="mt-4">
+            <Button label="Generate Key Card" onClick={handleCheckIn} />
           </div>
         </div>
-
-        
       </div>
+
+      {/* Payment Details Form */}
+      {showPaymentForm && (
+        <div className="mt-6 rounded-lg bg-white p-4 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+            Payment Details
+          </h2>
+          <form className="mt-4 space-y-2">
+            <input
+              type="number"
+              placeholder="Card Number"
+              className="w-3/4 rounded-md border border-gray-300 p-3 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+              required
+            />
+            <input
+              type="text"
+              placeholder="Cardholder Name"
+              className="w-3/4 rounded-md border border-gray-300 p-3 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+              required
+            />
+            <input
+              type="text"
+              placeholder="Expiration Date (MM/YY)"
+              className="w-3/4 rounded-md border border-gray-300 p-3 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+              required
+            />
+            <input
+              type="number"
+              placeholder="CVV"
+              className="w-3/4 rounded-md border border-gray-300 p-3 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+              required
+            />
+          </form>
+          <Button label="Submit Payment" onClick={handleCheckIn} />
+        </div>
+      )}
     </div>
   );
 }
