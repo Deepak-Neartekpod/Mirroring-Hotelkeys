@@ -23,12 +23,6 @@ export const NAV_DATA: Section[] = [
     label: "Dashboard",
     items: [
       {
-        title: "Departures",
-        url: "/departures",
-        icon: Icons.User,
-        items: [],
-      },
-      {
         title: "Check-In",
         url: "/checkin",
         icon: Icons.Table,
@@ -41,11 +35,6 @@ export const NAV_DATA: Section[] = [
       {
         title: "Check-Out",
         url: "/checkout",
-        icon: Icons.Table,
-      },
-      {
-        title: "In House",
-        url: "/inhouse",
         icon: Icons.Table,
       },
       {

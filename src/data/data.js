@@ -42,3 +42,8 @@ const data = {
 };
 
 export default data;
+
+export const bookingData = {
+  name: "John Doe",
+  paymentMethod: "Credit Card",
+};

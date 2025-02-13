@@ -2,11 +2,15 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui-elements/button";
+import { bookingData } from "@/data/data"; // Adjust the path as necessary
 
 export default function CheckIn() {
-  const [name, setName] = useState("");
+  const [name, setName] = useState(bookingData.name || "");
   const [bookingId, setBookingId] = useState("");
   const [room, setRoom] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState(
+    bookingData.paymentMethod || "Credit Card",
+  );
 
   const handleCheckIn = () => {
     // Handle check-in logic here
@@ -25,7 +29,7 @@ export default function CheckIn() {
         {/* Search Reservation */}
         <div className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
           <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-            Search Reservation 
+            Search Reservation
           </h2>
           <div className="mt-4 space-y-2">
             <input
@@ -48,19 +52,19 @@ export default function CheckIn() {
         {/* Guest Details */}
         <div className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
           <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-            Guest Details 
+            Guest Details
           </h2>
           <div className="mt-4 space-y-2 text-gray-700 dark:text-gray-200">
             <p>Name: {name || "N/A"}</p>
             <p>Booking ID: {bookingId || "N/A"}</p>
-            <p>Payment Method: Credit Card</p>
+            <p>Payment Method: {paymentMethod}</p>
           </div>
         </div>
 
         {/* Assign Room */}
         <div className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
           <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-            Assign Room 
+            Assign Room
           </h2>
           <select
             value={room}
@@ -77,7 +81,7 @@ export default function CheckIn() {
         {/* Payment */}
         <div className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
           <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-            Payment 
+            Payment
           </h2>
           <div className="mt-4">
             <Button label="Authorize Payment" onClick={handleCheckIn} />
@@ -87,7 +91,7 @@ export default function CheckIn() {
         {/* Issue Key */}
         <div className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
           <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-            Issue Key 
+            Issue Key
           </h2>
           <div className="mt-4">
             <Button label="Generate Key Card" onClick={handleCheckIn} />
