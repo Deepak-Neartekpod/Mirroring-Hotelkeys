@@ -26,7 +26,7 @@ function Header() {
         </button>
         <div className="flex items-center gap-2">
           <span className="text-gray-600">0 min ago</span>
-          <button className="rounded-md bg-[#00A3E0] p-1 text-white hover:bg-[#0093c9]">
+          <button className="rounded-md bg-primary p-1 text-white hover:bg-[#0093c9]">
             <User className="h-5 w-5" />
           </button>
         </div>
