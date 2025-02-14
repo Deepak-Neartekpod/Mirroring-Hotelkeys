@@ -1,191 +1,131 @@
 "use client";
 
-import React, { useState } from "react";
-import { Button } from "@/components/ui-elements/button";
-import { bookingData } from "@/data/data"; // Adjust the path as necessary
+import { Calendar, Search, User } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import { bookingData } from "@/data/data";
 
-const paymentMethods = ["Credit Card", "Debit Card", "PayPal"]; // Define available payment methods
-
-export default function CheckIn() {
-  const [name, setName] = useState(bookingData.name || "");
-  const [bookingId, setBookingId] = useState("");
-  const [reservationNumber, setReservationNumber] = useState("");
-  const [confirmationNumber, setConfirmationNumber] = useState("");
-  const [checkInDate, setCheckInDate] = useState("");
-  const [profileDetails, setProfileDetails] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [adults, setAdults] = useState(bookingData.adults || 0);
-  const [room, setRoom] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState(paymentMethods[0]); // Initialize with the first method
-  const [showPaymentForm, setShowPaymentForm] = useState(false);
-
-  const handleCheckIn = () => {
-    // Handle check-in logic here
-  };
-
-  const handleAuthorizePayment = () => {
-    setShowPaymentForm(true);
-  };
-
+export default function SearchReservations() {
   return (
-    <div className="bg-gray-100 p-6 dark:bg-gray-900">
-      {/* Header */}
-      <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
-        <h1 className="text-2xl font-semibold">Check-In</h1>
-        <Button label="Complete Check-In" onClick={handleCheckIn} />
-      </div>
-
-      {/* Grid Layout */}
-      <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
-        
-        {/* Profile Details */}
-        <div className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Profile Details</h2>
-          <div className="mt-4 space-y-2">
-            <input
-              type="text"
-              placeholder="Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full rounded-md border border-gray-300 p-2 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
-            />
-            <input
-              type="text"
-              placeholder="Profile Details"
-              value={profileDetails}
-              onChange={(e) => setProfileDetails(e.target.value)}
-              className="w-full rounded-md border border-gray-300 p-2 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
-            />
-          </div>
-        </div>
-
-        {/* Reservation Number */}
-        <div className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Reservation Number</h2>
-          <div className="mt-4 space-y-2">
-            <input
-              type="text"
-              placeholder="Reservation Number"
-              value={reservationNumber}
-              onChange={(e) => setReservationNumber(e.target.value)}
-              className="w-full rounded-md border border-gray-300 p-2 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
-            />
-          </div>
-        </div>
-
-        {/* Confirmation Number */}
-        <div className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Confirmation Number</h2>
-          <div className="mt-4 space-y-2">
-            <input
-              type="text"
-              placeholder="Confirmation Number"
-              value={confirmationNumber}
-              onChange={(e) => setConfirmationNumber(e.target.value)}
-              className="w-full rounded-md border border-gray-300 p-2 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
-            />
-          </div>
-        </div>
-
-        {/* Check-In Date */}
-        <div className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Check-In Date</h2>
-          <div className="mt-4">
+    <div className="rounded-lg bg-white shadow">
+      <div className="border-b p-4">
+        <div className="mb-4 grid grid-cols-4 gap-4">
+          <div className="relative">
             <input
               type="date"
-              value={checkInDate}
-              onChange={(e) => setCheckInDate(e.target.value)}
-              className="w-full rounded-md border border-gray-300 p-2 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+              className="w-full rounded border px-3 py-2"
+              defaultValue="2025-02-14"
             />
           </div>
-        </div>
-
-        {/* Room Selection */}
-        <div className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Room Selection</h2>
-          <div className="mt-4">
-            <select
-              value={room}
-              onChange={(e) => setRoom(e.target.value)}
-              className="w-full rounded-md border border-gray-300 p-2 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
-            >
-              <option value="">Select a room</option>
-              <option value="101">Room 101</option>
-              <option value="102">Room 102</option>
-              <option value="103">Room 103</option>
+          <div className="relative">
+            <input
+              type="date"
+              className="w-full rounded border px-3 py-2"
+              defaultValue="2025-02-16"
+            />
+          </div>
+          <div className="relative">
+            <select className="w-full appearance-none rounded border bg-white px-3 py-2">
+              <option>STATUS</option>
+              <option>Booked</option>
+              <option>Checked In</option>
+              <option>Checked Out</option>
             </select>
           </div>
         </div>
 
-        {/* Room Type */}
-        <div className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Payment Type</h2>
-          <div className="mt-4">
-            <select
-              value={paymentMethod}
-              onChange={(e) => setPaymentMethod(e.target.value)} // Update payment method on change
-              className="w-full rounded-md border border-gray-300 p-2 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
-            >
-              {paymentMethods.map((method) => (
-                <option key={method} value={method}>
-                  {method}
-                </option>
-              ))}
-            </select>
-            <Button
-              label="Authorize Payment"
-              onClick={handleAuthorizePayment}
+        <div className="grid grid-cols-4 gap-4">
+          <div className="relative">
+            <div className="absolute inset-y-0 left-3 flex items-center">
+              <User className="h-4 w-4 text-gray-400" />
+            </div>
+            <input
+              type="text"
+              placeholder="Guest Name"
+              className="w-full rounded border py-2 pl-10 pr-3"
             />
           </div>
-        </div>
-
-        {/* Payment Method */}
-        <div className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-            Issue Key
-          </h2>
-          <div className="mt-4">
-            <Button label="Generate Key Card" onClick={handleCheckIn} />
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Confirmation No."
+              className="w-full rounded border px-3 py-2"
+            />
           </div>
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Room Number"
+              className="w-full rounded border px-3 py-2"
+            />
+          </div>
+          <button className="flex items-center justify-center gap-2 rounded bg-[#00A3E0] px-4 py-2 text-white hover:bg-[#0093c9]">
+            <Search className="h-4 w-4" />
+            Search
+          </button>
         </div>
       </div>
 
-      {/* Payment Details Form */}
-      {showPaymentForm && (
-        <div className="mt-6 rounded-lg bg-white p-4 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-            Payment Details
-          </h2>
-          <form className="mt-4 space-y-2">
-            <input
-              type="number"
-              placeholder="Card Number"
-              className="w-3/4 rounded-md border border-gray-300 p-3 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
-              required
-            />
-            <input
-              type="text"
-              placeholder="Cardholder Name"
-              className="w-3/4 rounded-md border border-gray-300 p-3 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
-              required
-            />
-            <input
-              type="text"
-              placeholder="Expiration Date (MM/YY)"
-              className="w-3/4 rounded-md border border-gray-300 p-3 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
-              required
-            />
-            <input
-              type="number"
-              placeholder="CVV"
-              className="w-3/4 rounded-md border border-gray-300 p-3 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
-              required
-            />
-          </form>
-          <Button label="Submit Payment" onClick={handleCheckIn} />
+      <div className="p-4">
+        <div className="relative overflow-x-auto">
+          {bookingData.map((reservation, index) => (
+            <div
+              key={index}
+              className="grid grid-cols-6 gap-4 border-b py-4 last:border-0"
+            >
+              <div>
+                <div className="text-sm text-gray-600">Conf#</div>
+                <div className="flex items-center gap-2">
+                  {reservation.confirmationNumber}
+                  <Link
+                    href={{
+                      pathname: "/arrival",
+                      query: {
+                        profileName: reservation.profileName,
+                        reservationNumber: reservation.reservationNumber,
+                        confirmationNumber: reservation.confirmationNumber,
+                        checkInDate: reservation.checkInDate,
+                        checkOutDate: reservation.checkOutDate,
+                        roomSelection: reservation.roomSelection,
+                        paymentMethod: reservation.paymentMethod,
+                      },
+                    }}
+                  >
+                    <span className="cursor-pointer rounded bg-blue-100 px-2 py-0.5 text-xs text-blue-600">
+                      Booked
+                    </span>
+                  </Link>
+                </div>
+              </div>
+              <div>
+                <div className="text-sm text-gray-600">Guest</div>
+                <div>{reservation.profileName}</div>
+              </div>
+              <div>
+                <div className="text-sm text-gray-600">Check In/Out</div>
+                <div>{reservation.checkInDate}</div>
+                <div>{reservation.checkOutDate}</div>
+              </div>
+              <div>
+                <div className="text-sm text-gray-600">Room Selection</div>
+                <div>{reservation.roomSelection}</div>
+              </div>
+              <div>
+                <div className="text-sm text-gray-600">Payment Method</div>
+                <div className="text-[#00A3E0]">
+                  {reservation.paymentMethod}
+                </div>
+              </div>
+              <div>
+                <div className="text-sm text-gray-600">Company</div>
+                <div className="text-[#00A3E0]">
+                  {reservation.reservationNumber}
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-      )}
+      </div>
     </div>
   );
 }
