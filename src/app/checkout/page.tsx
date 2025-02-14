@@ -38,7 +38,7 @@ const CheckOut = () => {
 
       {/* Payment Details */}
       <div className="mt-6">
-        <h2 className="text-xl font-semibold">Payment Details 💳</h2>
+        <h2 className="text-xl font-semibold">Payment Details</h2>
         <input
           type="text"
           placeholder="Payment Amount"

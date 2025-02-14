@@ -11,6 +11,11 @@ export default function CheckIn() {
   const [bookingId, setBookingId] = useState("");
   const [reservationNumber, setReservationNumber] = useState("");
   const [confirmationNumber, setConfirmationNumber] = useState("");
+  const [checkInDate, setCheckInDate] = useState("");
+  const [profileDetails, setProfileDetails] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [adults, setAdults] = useState(bookingData.adults || 0);
   const [room, setRoom] = useState("");
   const [paymentMethod, setPaymentMethod] = useState(paymentMethods[0]); // Initialize with the first method
   const [showPaymentForm, setShowPaymentForm] = useState(false);
@@ -115,7 +120,7 @@ export default function CheckIn() {
 
         {/* Room Type */}
         <div className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Room Type</h2>
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Payment Type</h2>
           <div className="mt-4">
             <select
               value={paymentMethod}
