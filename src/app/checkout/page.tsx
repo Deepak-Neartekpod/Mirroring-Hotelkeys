@@ -25,7 +25,7 @@ const CheckOut = () => {
       <div className="mt-6">
         {/* Card: Search Reservation */}
         <div className="rounded-lg bg-white p-4 shadow-md">
-          <h2 className="text-xl font-semibold">Search Reservation 🔍</h2>
+          <h2 className="text-xl font-semibold">Search Reservation</h2>
           <input
             type="text"
             placeholder="Booking ID"
@@ -38,7 +38,7 @@ const CheckOut = () => {
 
       {/* Payment Details */}
       <div className="mt-6">
-        <h2 className="text-xl font-semibold">Payment Details 💳</h2>
+        <h2 className="text-xl font-semibold">Payment Details</h2>
         <input
           type="text"
           placeholder="Payment Amount"

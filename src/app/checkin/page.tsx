@@ -9,6 +9,13 @@ const paymentMethods = ["Credit Card", "Debit Card", "PayPal"]; // Define availa
 export default function CheckIn() {
   const [name, setName] = useState(bookingData.name || "");
   const [bookingId, setBookingId] = useState("");
+  const [reservationNumber, setReservationNumber] = useState("");
+  const [confirmationNumber, setConfirmationNumber] = useState("");
+  const [checkInDate, setCheckInDate] = useState("");
+  const [profileDetails, setProfileDetails] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [adults, setAdults] = useState(bookingData.adults || 0);
   const [room, setRoom] = useState("");
   const [paymentMethod, setPaymentMethod] = useState(paymentMethods[0]); // Initialize with the first method
   const [showPaymentForm, setShowPaymentForm] = useState(false);
@@ -31,11 +38,10 @@ export default function CheckIn() {
 
       {/* Grid Layout */}
       <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
-        {/* Search Reservation */}
+        
+        {/* Profile Details */}
         <div className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-            Search Reservation
-          </h2>
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Profile Details</h2>
           <div className="mt-4 space-y-2">
             <input
               type="text"
@@ -46,48 +52,75 @@ export default function CheckIn() {
             />
             <input
               type="text"
-              placeholder="Booking ID"
-              value={bookingId}
-              onChange={(e) => setBookingId(e.target.value)}
+              placeholder="Profile Details"
+              value={profileDetails}
+              onChange={(e) => setProfileDetails(e.target.value)}
               className="w-full rounded-md border border-gray-300 p-2 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
             />
           </div>
         </div>
 
-        {/* Guest Details */}
+        {/* Reservation Number */}
         <div className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-            Guest Details
-          </h2>
-          <div className="mt-4 space-y-2 text-gray-700 dark:text-gray-200">
-            <p>Name: {name || "N/A"}</p>
-            <p>Booking ID: {bookingId || "N/A"}</p>
-            <p>Payment Method: {paymentMethod}</p>
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Reservation Number</h2>
+          <div className="mt-4 space-y-2">
+            <input
+              type="text"
+              placeholder="Reservation Number"
+              value={reservationNumber}
+              onChange={(e) => setReservationNumber(e.target.value)}
+              className="w-full rounded-md border border-gray-300 p-2 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+            />
           </div>
         </div>
 
-        {/* Assign Room */}
+        {/* Confirmation Number */}
         <div className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-            Assign Room
-          </h2>
-          <select
-            value={room}
-            onChange={(e) => setRoom(e.target.value)}
-            className="mt-4 w-full rounded-md border border-gray-300 p-2 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
-          >
-            <option value="">Select a room</option>
-            <option value="101">Room 101</option>
-            <option value="102">Room 102</option>
-            <option value="103">Room 103</option>
-          </select>
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Confirmation Number</h2>
+          <div className="mt-4 space-y-2">
+            <input
+              type="text"
+              placeholder="Confirmation Number"
+              value={confirmationNumber}
+              onChange={(e) => setConfirmationNumber(e.target.value)}
+              className="w-full rounded-md border border-gray-300 p-2 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+            />
+          </div>
         </div>
 
-        {/* Payment */}
+        {/* Check-In Date */}
         <div className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-            Payment
-          </h2>
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Check-In Date</h2>
+          <div className="mt-4">
+            <input
+              type="date"
+              value={checkInDate}
+              onChange={(e) => setCheckInDate(e.target.value)}
+              className="w-full rounded-md border border-gray-300 p-2 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+            />
+          </div>
+        </div>
+
+        {/* Room Selection */}
+        <div className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Room Selection</h2>
+          <div className="mt-4">
+            <select
+              value={room}
+              onChange={(e) => setRoom(e.target.value)}
+              className="w-full rounded-md border border-gray-300 p-2 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+            >
+              <option value="">Select a room</option>
+              <option value="101">Room 101</option>
+              <option value="102">Room 102</option>
+              <option value="103">Room 103</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Room Type */}
+        <div className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Payment Type</h2>
           <div className="mt-4">
             <select
               value={paymentMethod}
@@ -107,7 +140,7 @@ export default function CheckIn() {
           </div>
         </div>
 
-        {/* Issue Key */}
+        {/* Payment Method */}
         <div className="rounded-lg bg-white p-4 shadow-sm ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700">
           <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
             Issue Key
