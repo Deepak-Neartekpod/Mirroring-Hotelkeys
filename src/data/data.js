@@ -43,6 +43,42 @@ const data = {
 
 export default data;
 
+export const walkInData = [
+  {
+    name: "John Doe",
+    contact: "123-456-7890",
+    identification: "A12345678",
+    roomType: "KNGN",
+    paymentMethod: "creditCard",
+    loyalty: true,
+    checkInDate: "2025-02-17",
+    assignedRoom: "Room 1 - $214",
+    status: "Checked-in",
+  },
+  {
+    name: "Jane Smith",
+    contact: "987-654-3210",
+    identification: "B87654321",
+    roomType: "TQNN",
+    paymentMethod: "cash",
+    loyalty: false,
+    checkInDate: "2025-02-17",
+    assignedRoom: "Room 2 - $179",
+    status: "Checked-in",
+  },
+  {
+    name: "Alice Johnson",
+    contact: "555-123-4567",
+    identification: "C54321789",
+    roomType: "TDBN",
+    paymentMethod: "creditCard",
+    loyalty: false,
+    checkInDate: "2025-02-18",
+    assignedRoom: "Room 3 - $214",
+    status: "Checked-in",
+  },
+];
+
 export const bookingData = [
   {
     profileName: "John Doe",
