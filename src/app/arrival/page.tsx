@@ -9,7 +9,8 @@ export default function CheckIn() {
   const [confirmationNumber, setConfirmationNumber] = useState("");
   const [roomType, setRoomType] = useState("");
   const [roomNumber, setRoomNumber] = useState("");
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [checkInDate, setCheckInDate] = useState(""); // New state for check-in date
+  const [successMessage, setSuccessMessage] = useState(""); // New state for success message
   
   const router = useRouter(); // Initialize router
 
@@ -19,35 +20,41 @@ export default function CheckIn() {
     setConfirmationNumber(urlParams.get("confirmationNumber") || "");
     setRoomType(urlParams.get("roomType") || "");
     setRoomNumber(urlParams.get("roomNumber") || "");
+
+    // Initialize check-in date to current date before the user clicks the button
+    const currentDate = new Date().toLocaleDateString(); // Get current date in 'MM/DD/YYYY' format
+    setCheckInDate(currentDate); // Set the current date as check-in date
   }, []);
 
   const handleCheckIn = () => {
-    setShowSuccessMessage(true);
+    // Show the success message when the button is clicked
+    setSuccessMessage("Check-In successful!");
 
-    // Redirect to the check-in page after 3 seconds
+    // Redirect to the check-in page after 1 second
     setTimeout(() => {
       router.push("/checkin");
-    },1000);
+    }, 1000);
   };
 
   return (
     <div className="bg-gray-100 dark:bg-gray-900 min-h-screen p-8">
       {/* Header */}
       <div className="flex flex-col md:flex-row items-center justify-between">
-        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
-          Check-In
-        </h1>
-        <Button
-          label="Complete Check-In"
-          onClick={handleCheckIn}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md"
-        />
-      </div>
+  <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
+    Check-In
+  </h1>
+  <Button
+    label="Complete Check-In"
+    onClick={handleCheckIn}
+    className="bg-[#5750F1] hover:bg-[#4940D3] text-white font-semibold px-6 py-2 rounded-lg shadow-md"
+  />
+</div>
+
 
       {/* Success Message */}
-      {showSuccessMessage && (
-        <div className="mt-4 p-4 bg-green-100 text-green-800 rounded-lg shadow-md dark:bg-green-900 dark:text-green-100">
-          Check-in completed successfully!
+      {successMessage && (
+        <div className="mt-4 p-4 bg-green-500 text-white rounded-md">
+          {successMessage}
         </div>
       )}
 
@@ -105,6 +112,19 @@ export default function CheckIn() {
             placeholder="Room Number"
             value={roomNumber}
             onChange={(e) => setRoomNumber(e.target.value)}
+            className="mt-2 w-full p-2 border rounded-md dark:bg-gray-900 dark:text-white dark:border-gray-700"
+          />
+        </div>
+
+        {/* Check-In Date */}
+        <div className="bg-white p-4 rounded-lg shadow-md dark:bg-gray-800">
+          <h2 className="text-lg font-semibold text-gray-700 dark:text-white">
+            Check-In Date
+          </h2>
+          <input
+            type="text"
+            value={checkInDate}
+            readOnly
             className="mt-2 w-full p-2 border rounded-md dark:bg-gray-900 dark:text-white dark:border-gray-700"
           />
         </div>
