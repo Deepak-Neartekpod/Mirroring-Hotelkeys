@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation"; // Import useRouter
 import { Button } from "@/components/ui-elements/button";
 
 export default function CheckIn() {
@@ -9,6 +10,8 @@ export default function CheckIn() {
   const [roomType, setRoomType] = useState("");
   const [roomNumber, setRoomNumber] = useState("");
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  
+  const router = useRouter(); // Initialize router
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -20,7 +23,11 @@ export default function CheckIn() {
 
   const handleCheckIn = () => {
     setShowSuccessMessage(true);
-    setTimeout(() => setShowSuccessMessage(false), 3000);
+
+    // Redirect to the check-in page after 3 seconds
+    setTimeout(() => {
+      router.push("/checkin");
+    }, 2000);
   };
 
   return (
