@@ -1,8 +1,9 @@
 import { cva, VariantProps } from "class-variance-authority";
-import type { HTMLAttributes } from "react";
+import { cn } from "@/lib/utils"; // Utility function for class merging (optional)
+import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2.5 text-center font-medium hover:bg-opacity-90 font-medium transition focus:outline-none",
+  "inline-flex items-center justify-center gap-2.5 text-center font-medium hover:bg-opacity-90 transition focus:outline-none",
   {
     variants: {
       variant: {
@@ -17,12 +18,12 @@ const buttonVariants = cva(
       },
       shape: {
         default: "",
-        rounded: "rounded-[5px]",
+        rounded: "rounded-md",
         full: "rounded-full",
       },
       size: {
-        default: "py-3.5 px-10 py-3.5 lg:px-8 xl:px-10",
-        small: "py-[11px] px-6",
+        default: "py-3.5 px-8 lg:px-10",
+        small: "py-2.5 px-6",
       },
     },
     defaultVariants: {
@@ -30,13 +31,13 @@ const buttonVariants = cva(
       shape: "default",
       size: "default",
     },
-  },
+  }
 );
 
-type ButtonProps = HTMLAttributes<HTMLButtonElement> &
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> &
   VariantProps<typeof buttonVariants> & {
     label: string;
-    icon?: React.ReactNode;
+    icon?: ReactNode;
   };
 
 export function Button({
@@ -50,7 +51,7 @@ export function Button({
 }: ButtonProps) {
   return (
     <button
-      className={buttonVariants({ variant, shape, size, className })}
+      className={cn(buttonVariants({ variant, shape, size }), className)}
       {...props}
     >
       {icon && <span>{icon}</span>}
