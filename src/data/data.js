@@ -49,29 +49,39 @@ export const bookingData = [
     confirmationNumber: "43128901",
     roomType: "KNGN", // King Non-Smoking
     roomNumber: "101",
+    checkInDate: "2025-02-17", // Today's date
+    status: "Arrival", // Initial status
   },
   {
     profileName: "Jane Smith",
     confirmationNumber: "56872109",
     roomType: "TQNN", // Two Queen Beds Non-Smoking
     roomNumber: "202",
+    checkInDate: "2025-02-17", // Today's date
+    status: "Arrival", // Initial status
   },
   {
     profileName: "Alice Johnson",
     confirmationNumber: "23147561",
     roomType: "TDBN", // Two Double Beds Non-Smoking
     roomNumber: "303",
+    checkInDate: "2025-02-20", // Future date
+    status: "Reserved", // Initial status
   },
   {
     profileName: "Michael Brown",
     confirmationNumber: "67834512",
     roomType: "KNGS", // King Smoking
     roomNumber: "104",
+    checkInDate: "2025-02-19", // Future date
+    status: "Reserved", // Initial status
   },
   {
     profileName: "Emily Davis",
     confirmationNumber: "12983745",
     roomType: "QQNS", // Queen-Queen Non-Smoking
     roomNumber: "205",
+    checkInDate: "2025-02-18", // Future date
+    status: "Reserved", // Initial status
   },
 ];

@@ -37,6 +37,22 @@ export default function SearchReservations() {
     setCurrentView(view);
   };
 
+  // Generate status based on the date
+  const getStatus = (reservation: any) => {
+    const reservationDate = new Date(reservation.checkInDate);
+    const today = new Date();
+
+    if (today.toDateString() === reservationDate.toDateString()) {
+      return "Arrival";
+    }
+
+    if (today > reservationDate) {
+      return "No Show";
+    }
+
+    return "Reserved";
+  };
+
   // Room View UI
   const renderRoomView = () => {
     const groupedByRoomType = bookingData.reduce((acc, reservation) => {
@@ -60,6 +76,7 @@ export default function SearchReservations() {
                     {reservation.roomNumber}
                   </div>
                   <div className="text-sm text-gray-500">{reservation.confirmationNumber}</div>
+                  <div className="text-sm text-gray-500">{getStatus(reservation)}</div>
                 </li>
               ))}
             </ul>
@@ -131,25 +148,19 @@ export default function SearchReservations() {
       <div className="mt-4 mb-6 flex justify-center gap-8">
         <button
           onClick={() => switchView("list")}
-          className={`py-2 px-4 rounded-lg ${
-            currentView === "list" ? "bg-[#5750F1] text-white" : "bg-gray-200"
-          }`}
+          className={`py-2 px-4 rounded-lg ${currentView === "list" ? "bg-[#5750F1] text-white" : "bg-gray-200"}`}
         >
           List View
         </button>
         <button
           onClick={() => switchView("room")}
-          className={`py-2 px-4 rounded-lg ${
-            currentView === "room" ? "bg-[#5750F1] text-white" : "bg-gray-200"
-          }`}
+          className={`py-2 px-4 rounded-lg ${currentView === "room" ? "bg-[#5750F1] text-white" : "bg-gray-200"}`}
         >
           Room View
         </button>
         <button
           onClick={() => switchView("tape")}
-          className={`py-2 px-4 rounded-lg ${
-            currentView === "tape" ? "bg-[#5750F1] text-white" : "bg-gray-200"
-          }`}
+          className={`py-2 px-4 rounded-lg ${currentView === "tape" ? "bg-[#5750F1] text-white" : "bg-gray-200"}`}
         >
           Tape Chart
         </button>
@@ -191,43 +202,35 @@ export default function SearchReservations() {
                     Activation
                   </div>
                 </th>
+                <th className="px-5 py-3 font-semibold uppercase tracking-wide">Status</th>
               </tr>
             </thead>
 
             <tbody>
               {filteredData.length > 0 ? (
                 filteredData.map((reservation, index) => (
-                  <tr
-                    key={index}
-                    className="text-center text-gray-900 dark:text-white"
-                  >
+                  <tr key={index} className="text-center text-gray-900 dark:text-white">
                     <td className="px-5 py-4">{reservation.confirmationNumber}</td>
                     <td className="px-5 py-4">{reservation.profileName}</td>
                     <td className="px-5 py-4">{reservation.roomType}</td>
                     <td className="px-5 py-4">{reservation.roomNumber}</td>
                     <td className="px-5 py-4">
                       <Link
-                        href={{
-                          pathname: "/arrival",
-                          query: {
-                            confirmationNumber: reservation.confirmationNumber,
-                            profileName: reservation.profileName,
-                            roomType: reservation.roomType,
-                            roomNumber: reservation.roomNumber,
-                          },
-                        }}
+                        href="#"
+                        className={`${
+                          getStatus(reservation) === "Reserved" ? "bg-gray-300" : "bg-green-500"
+                        } text-white py-2 px-4 rounded`}
                       >
-                        <span className="cursor-pointer rounded-md bg-[#D9D7FF] px-4 py-2 text-sm font-semibold text-[#5750F1] dark:bg-[#5750F1] dark:text-white transition-all hover:bg-[#4940D3] hover:text-white">
-                          Check in
-                        </span>
+                        {getStatus(reservation) === "Reserved" ? "Reserved" : "Check-In"}
                       </Link>
                     </td>
+                    <td className="px-5 py-4">{getStatus(reservation)}</td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={5} className="px-5 py-4 text-center text-gray-600 dark:text-gray-400">
-                    No matching reservation found.
+                  <td colSpan={6} className="text-center py-4">
+                    No reservations found.
                   </td>
                 </tr>
               )}
@@ -236,8 +239,8 @@ export default function SearchReservations() {
         </div>
       )}
 
+      {/* Display Room View or Tape Chart based on selection */}
       {currentView === "room" && renderRoomView()}
-
       {currentView === "tape" && renderTapeChart()}
     </div>
   );
