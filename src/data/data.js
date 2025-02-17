@@ -46,29 +46,32 @@ export default data;
 export const bookingData = [
   {
     profileName: "John Doe",
-    reservationNumber: "RES123456",
-    confirmationNumber: "CONF789012",
-    checkInDate: "2025-02-14",
-    checkOutDate: "2025-02-16",
-    roomSelection: "Preferred Two Queen Beds",
-    paymentMethod: "Credit Card",
+    confirmationNumber: "43128901",
+    roomType: "KNGN", // King Non-Smoking
+    roomNumber: "101",
   },
   {
     profileName: "Jane Smith",
-    reservationNumber: "RES654321",
-    confirmationNumber: "CONF210987",
-    checkInDate: "2025-03-01",
-    checkOutDate: "2025-03-05",
-    roomSelection: "Classic King Bed",
-    paymentMethod: "Debit Card",
+    confirmationNumber: "56872109",
+    roomType: "TQNN", // Two Queen Beds Non-Smoking
+    roomNumber: "202",
   },
   {
     profileName: "Alice Johnson",
-    reservationNumber: "RES789654",
-    confirmationNumber: "CONF456123",
-    checkInDate: "2025-04-10",
-    checkOutDate: "2025-04-15",
-    roomSelection: "Classic King Bed Accessible",
-    paymentMethod: "PayPal",
+    confirmationNumber: "23147561",
+    roomType: "TDBN", // Two Double Beds Non-Smoking
+    roomNumber: "303",
+  },
+  {
+    profileName: "Michael Brown",
+    confirmationNumber: "67834512",
+    roomType: "KNGS", // King Smoking
+    roomNumber: "104",
+  },
+  {
+    profileName: "Emily Davis",
+    confirmationNumber: "12983745",
+    roomType: "QQNS", // Queen-Queen Non-Smoking
+    roomNumber: "205",
   },
 ];
