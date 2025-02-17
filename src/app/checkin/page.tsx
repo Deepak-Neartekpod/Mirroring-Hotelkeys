@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { Search, Hash, User, BedDouble, Key, CheckCircle } from "lucide-react";
 import Link from "next/link";
@@ -10,6 +9,7 @@ export default function SearchReservations() {
   const [filteredData, setFilteredData] = useState(bookingData);
   const [currentDate, setCurrentDate] = useState("");
   const [currentView, setCurrentView] = useState("list");
+  const [reservations, setReservations] = useState(bookingData); // Track reservations state
 
   useEffect(() => {
     const today = new Date();
@@ -26,12 +26,12 @@ export default function SearchReservations() {
     const input = searchInput.trim();
     setFilteredData(
       input.length >= 1
-        ? bookingData.filter((reservation) =>
+        ? reservations.filter((reservation) =>
             reservation.confirmationNumber.startsWith(input)
           )
-        : bookingData
+        : reservations
     );
-  }, [searchInput]);
+  }, [searchInput, reservations]);
 
   const switchView = (view: string) => {
     setCurrentView(view);
@@ -53,9 +53,20 @@ export default function SearchReservations() {
     return "Reserved";
   };
 
+  // Handle check-in action with navigation to Arrival page
+  const handleCheckIn = (reservation: any) => {
+    const status = getStatus(reservation);
+
+    // If status is not "Reserved", navigate to Arrival page
+    if (status !== "Reserved") {
+      const { confirmationNumber, profileName, roomType, roomNumber } = reservation;
+      window.location.href = `/arrival?confirmationNumber=${confirmationNumber}&profileName=${profileName}&roomType=${roomType}&roomNumber=${roomNumber}`;
+    }
+  };
+
   // Room View UI
   const renderRoomView = () => {
-    const groupedByRoomType = bookingData.reduce((acc, reservation) => {
+    const groupedByRoomType = reservations.reduce((acc, reservation) => {
       if (!acc[reservation.roomType]) {
         acc[reservation.roomType] = [];
       }
@@ -89,9 +100,9 @@ export default function SearchReservations() {
   // Tape Chart UI
   const renderTapeChart = () => {
     const roomNumbers = Array.from(
-      new Set(bookingData.map((reservation) => reservation.roomNumber))
+      new Set(reservations.map((reservation) => reservation.roomNumber))
     );
-    const dates = Array.from(new Set(bookingData.map((reservation) => reservation.checkInDate)));
+    const dates = Array.from(new Set(reservations.map((reservation) => reservation.checkInDate)));
 
     return (
       <div className="space-y-4">
@@ -100,7 +111,7 @@ export default function SearchReservations() {
             <div className="font-semibold">Room {roomNumber}</div>
             <div className="grid grid-cols-7 gap-1">
               {dates.map((date, index) => {
-                const isBooked = bookingData.some(
+                const isBooked = reservations.some(
                   (reservation) =>
                     reservation.roomNumber === roomNumber &&
                     reservation.checkInDate === date
@@ -123,7 +134,7 @@ export default function SearchReservations() {
     <div className="rounded-xl bg-white p-6 shadow-md ring-1 ring-gray-300 dark:bg-gray-900 dark:ring-gray-700">
       <div className="mb-4 text-center">
         <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-          Check-in Reservation
+          Check-In 
         </h2>
         <p className="text-sm text-gray-600 dark:text-gray-400">{currentDate}</p>
       </div>
@@ -197,15 +208,16 @@ export default function SearchReservations() {
                   </div>
                 </th>
                 <th className="px-5 py-3 font-semibold uppercase tracking-wide">
+                  Status
+                </th>
+                <th className="px-5 py-3 font-semibold uppercase tracking-wide">
                   <div className="flex items-center justify-center gap-2">
                     <CheckCircle className="h-4 w-4" />
                     Activation
                   </div>
                 </th>
-                <th className="px-5 py-3 font-semibold uppercase tracking-wide">Status</th>
               </tr>
             </thead>
-
             <tbody>
               {filteredData.length > 0 ? (
                 filteredData.map((reservation, index) => (
@@ -214,17 +226,20 @@ export default function SearchReservations() {
                     <td className="px-5 py-4">{reservation.profileName}</td>
                     <td className="px-5 py-4">{reservation.roomType}</td>
                     <td className="px-5 py-4">{reservation.roomNumber}</td>
-                    <td className="px-5 py-4">
-                      <Link
-                        href="#"
-                        className={`${
-                          getStatus(reservation) === "Reserved" ? "bg-gray-300" : "bg-green-500"
-                        } text-white py-2 px-4 rounded`}
-                      >
-                        {getStatus(reservation) === "Reserved" ? "Reserved" : "Check-In"}
-                      </Link>
-                    </td>
                     <td className="px-5 py-4">{getStatus(reservation)}</td>
+                    <td className="px-5 py-4">
+  <button
+    onClick={() => handleCheckIn(reservation)}
+    className={`${
+      getStatus(reservation) === "Reserved"
+        ? "bg-gray-300 text-gray-700 hover:bg-gray-400" // Reserved state (muted gray)
+        : "bg-[#5750F1] text-white hover:bg-[#4940D3]" // Check-In state (same as Search button)
+    } text-sm py-2 px-4 rounded-lg transition-all duration-300`}
+  >
+    {getStatus(reservation) === "Reserved" ? "Reserved" : "Check-In"}
+  </button>
+</td>
+
                   </tr>
                 ))
               ) : (
@@ -239,7 +254,7 @@ export default function SearchReservations() {
         </div>
       )}
 
-      {/* Display Room View or Tape Chart based on selection */}
+      {/* Render based on current view */}
       {currentView === "room" && renderRoomView()}
       {currentView === "tape" && renderTapeChart()}
     </div>

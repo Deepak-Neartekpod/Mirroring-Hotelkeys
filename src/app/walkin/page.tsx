@@ -72,7 +72,7 @@ export default function WalkInPage() {
       if (availableRooms.length > 0) {
         const assignedRoom = availableRooms[0];
         setCheckInMessage(
-          `Check-in successful! ${data.name} has been assigned room ${assignedRoom} at a rate of $${selectedRate}.`
+          `Check-in successful! ${data.name} has been assigned  ${assignedRoom}.`
         );
       } else {
         setCheckInMessage("Selected room type is not available.");
