@@ -27,7 +27,7 @@ export default function CheckIn() {
     // Redirect to the check-in page after 3 seconds
     setTimeout(() => {
       router.push("/checkin");
-    }, 2000);
+    },1000);
   };
 
   return (
