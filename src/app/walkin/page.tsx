@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Button } from "@/components/ui-elements/button";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, User, Phone, CreditCard, Gift } from "lucide-react";
 import { walkInData } from "@/data/data";
 
 type GuestInfo = {
@@ -72,7 +72,7 @@ export default function WalkInPage() {
       if (availableRooms.length > 0) {
         const assignedRoom = availableRooms[0];
         setCheckInMessage(
-          `Check-in successful! ${data.name} has been assigned  ${assignedRoom}.`
+          `Check-in successful! ${data.name} has been assigned ${assignedRoom}.`
         );
       } else {
         setCheckInMessage("Selected room type is not available.");
@@ -86,39 +86,53 @@ export default function WalkInPage() {
 
   return (
     <div className="rounded-xl bg-white p-8 shadow-lg ring-1 ring-gray-300 dark:bg-gray-900 dark:ring-gray-700">
-      <div className="mb-6 text-center">
+      <div className="mb-8 text-center">
         <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-          Walk-in 
+          Walk-In 
         </h2>
+        
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-        {/* Name Field */}
-        <div>
-          <label className="block font-medium text-gray-800 dark:text-white">
-            Guest Name
-          </label>
-          <input
-            type="text"
-            placeholder="Enter guest name"
-            {...register("name", { required: "Name is required" })}
-            className={inputBaseClasses}
-          />
-          {errors.name && <span className="text-red-500">{errors.name.message}</span>}
-        </div>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        {/* Guest Information Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Name Field */}
+          <div>
+            <label className="block font-medium text-gray-800 dark:text-white">
+              Guest Name
+            </label>
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Enter guest name"
+                {...register("name", { required: "Name is required" })}
+                className={`${inputBaseClasses} pl-10`}
+              />
+            </div>
+            {errors.name && (
+              <span className="text-red-500">{errors.name.message}</span>
+            )}
+          </div>
 
-        {/* Contact Field */}
-        <div>
-          <label className="block font-medium text-gray-800 dark:text-white">
-            Contact Number
-          </label>
-          <input
-            type="text"
-            placeholder="Enter contact number"
-            {...register("contact", { required: "Contact is required" })}
-            className={inputBaseClasses}
-          />
-          {errors.contact && <span className="text-red-500">{errors.contact.message}</span>}
+          {/* Contact Field */}
+          <div>
+            <label className="block font-medium text-gray-800 dark:text-white">
+              Contact Number
+            </label>
+            <div className="relative">
+              <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Enter contact number"
+                {...register("contact", { required: "Contact is required" })}
+                className={`${inputBaseClasses} pl-10`}
+              />
+            </div>
+            {errors.contact && (
+              <span className="text-red-500">{errors.contact.message}</span>
+            )}
+          </div>
         </div>
 
         {/* Identification Field */}
@@ -129,10 +143,14 @@ export default function WalkInPage() {
           <input
             type="text"
             placeholder="Enter ID number"
-            {...register("identification", { required: "Identification is required" })}
+            {...register("identification", {
+              required: "Identification is required",
+            })}
             className={inputBaseClasses}
           />
-          {errors.identification && <span className="text-red-500">{errors.identification.message}</span>}
+          {errors.identification && (
+            <span className="text-red-500">{errors.identification.message}</span>
+          )}
         </div>
 
         {/* Room Type Selection */}
@@ -149,12 +167,14 @@ export default function WalkInPage() {
             <option value="TQNN">Two Queen Beds Non-Smoking</option>
             <option value="TDBN">Two Double Beds Non-Smoking</option>
           </select>
-          {errors.roomType && <span className="text-red-500">{errors.roomType.message}</span>}
+          {errors.roomType && (
+            <span className="text-red-500">{errors.roomType.message}</span>
+          )}
         </div>
 
         {/* Available Rooms Display */}
         {availableRooms.length > 0 && (
-          <div>
+          <div className="bg-blue-50 p-4 rounded-lg">
             <label className="block font-medium text-gray-800 dark:text-white">
               Available Rooms
             </label>
@@ -168,11 +188,11 @@ export default function WalkInPage() {
 
         {/* Room Rate Display */}
         {selectedRate && (
-          <div>
+          <div className="bg-blue-50 p-4 rounded-lg">
             <label className="block font-medium text-gray-800 dark:text-white">
               Room Rate
             </label>
-            <div className="text-lg font-semibold text-blue-600 dark:text-blue-400">
+            <div className="text-lg font-semibold text-green-600 dark:text-green-400">
               ${selectedRate}
             </div>
           </div>
@@ -183,15 +203,22 @@ export default function WalkInPage() {
           <label className="block font-medium text-gray-800 dark:text-white">
             Payment Method
           </label>
-          <select
-            {...register("paymentMethod", { required: "Payment method is required" })}
-            className={inputBaseClasses}
-          >
-            <option value="">Select Payment Method</option>
-            <option value="creditCard">Credit Card</option>
-            <option value="cash">Cash</option>
-          </select>
-          {errors.paymentMethod && <span className="text-red-500">{errors.paymentMethod.message}</span>}
+          <div className="relative">
+            <CreditCard className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <select
+              {...register("paymentMethod", {
+                required: "Payment method is required",
+              })}
+              className={`${inputBaseClasses} pl-10`}
+            >
+              <option value="">Select Payment Method</option>
+              <option value="creditCard">Credit Card</option>
+              <option value="cash">Cash</option>
+            </select>
+          </div>
+          {errors.paymentMethod && (
+            <span className="text-red-500">{errors.paymentMethod.message}</span>
+          )}
         </div>
 
         {/* Check-in Button */}
@@ -212,7 +239,7 @@ export default function WalkInPage() {
       </form>
 
       {checkInMessage && (
-        <div className="mt-5 text-center text-lg font-semibold text-green-600 dark:text-green-400">
+        <div className="mt-6 p-4 bg-green-100 rounded-lg text-center text-green-700 dark:bg-green-900 dark:text-green-200">
           {checkInMessage}
         </div>
       )}
