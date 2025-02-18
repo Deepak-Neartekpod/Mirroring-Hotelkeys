@@ -5,6 +5,11 @@ export const NAV_DATA: Section[] = [
     label: "Dashboard",
     items: [
       {
+        title: "Reservations",
+        url: "/reservation",
+        icon: Icons.ReservationIcon,
+      },
+      {
         title: "Check-In",
         url: "/checkin",
         icon: Icons.CheckInIcon,
@@ -23,6 +28,11 @@ export const NAV_DATA: Section[] = [
         title: "Availability",
         url: "/availability",
         icon: Icons.AvailabilityIcon,
+      },
+      {
+        title: "Reports",
+        url: "/reports",
+        icon: Icons.ReportsIcon,
       },
     ],
   },
