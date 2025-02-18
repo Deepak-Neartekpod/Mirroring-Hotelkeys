@@ -64,3 +64,34 @@ export function AvailabilityIcon(props: PropsType) {
     </svg>
   );
 }
+
+export function ReservationIcon(props: PropsType) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={24}
+      height={24}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      {...props}
+    >
+      <path d="M17 2h-2V1a1 1 0 00-2 0v1H7V1a1 1 0 00-2 0v1H4a2 2 0 00-2 2v18a2 2 0 002 2h16a2 2 0 002-2V4a2 2 0 00-2-2zm0 18H7V6h10v14zm-4.707-7.707a1 1 0 011.414 0l2 2a1 1 0 01-1.414 1.414l-1.293-1.293-1.293 1.293a1 1 0 01-1.414-1.414l2-2z" />
+    </svg>
+  );
+}
+  export function ReportsIcon(props: PropsType) {
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={24}
+        height={24}
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        {...props}
+      >
+        <path d="M17 2H7c-1.1 0-1.99.9-1.99 2L5 18c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 16H7V4h10v14zm-4-7h-2v3H9v-3H7v5h5v-5zm0-4h-2v2H9V7H7V5h5v2z" />
+      </svg>
+    );
+  }
+  
+
