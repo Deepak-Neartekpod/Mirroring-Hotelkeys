@@ -9,7 +9,7 @@ export default function SearchReservations() {
   const [filteredData, setFilteredData] = useState(bookingData);
   const [currentDate, setCurrentDate] = useState("");
   const [currentView, setCurrentView] = useState("list");
-  const [reservations, setReservations] = useState(bookingData); // Track reservations state
+  const [reservations, setReservations] = useState(bookingData);
 
   useEffect(() => {
     const today = new Date();
@@ -37,7 +37,6 @@ export default function SearchReservations() {
     setCurrentView(view);
   };
 
-  // Generate status based on the date
   const getStatus = (reservation: any) => {
     const reservationDate = new Date(reservation.checkInDate);
     const today = new Date();
@@ -53,18 +52,16 @@ export default function SearchReservations() {
     return "Reserved";
   };
 
-  // Handle check-in action with navigation to Arrival page
   const handleCheckIn = (reservation: any) => {
     const status = getStatus(reservation);
 
-    // If status is not "Reserved", navigate to Arrival page
     if (status !== "Reserved") {
       const { confirmationNumber, profileName, roomType, roomNumber } = reservation;
       window.location.href = `/arrival?confirmationNumber=${confirmationNumber}&profileName=${profileName}&roomType=${roomType}&roomNumber=${roomNumber}`;
     }
   };
 
-  // Room View UI
+  // Updated Room View UI
   const renderRoomView = () => {
     const groupedByRoomType = reservations.reduce((acc, reservation) => {
       if (!acc[reservation.roomType]) {
@@ -75,57 +72,105 @@ export default function SearchReservations() {
     }, {});
 
     return (
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {Object.keys(groupedByRoomType).map((roomType) => (
-          <div key={roomType} className="bg-white p-4 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold">{roomType}</h3>
-            <ul className="mt-2">
+          <div
+            key={roomType}
+            className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300"
+          >
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">{roomType}</h3>
+            <div className="space-y-4">
               {groupedByRoomType[roomType].map((reservation, index) => (
-                <li key={index} className="border-b pb-2 mb-2">
-                  <div>
-                    <strong>{reservation.profileName}</strong> -{" "}
-                    {reservation.roomNumber}
+                <div
+                  key={index}
+                  className="p-4 rounded-lg border border-gray-200 hover:border-[#5750F1] transition-all duration-300"
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="font-medium text-gray-900">
+                        {reservation.profileName}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        Room {reservation.roomNumber}
+                      </div>
+                    </div>
+                    <div
+                      className={`text-sm font-semibold ${
+                        getStatus(reservation) === "Arrival"
+                          ? "text-green-600"
+                          : getStatus(reservation) === "No Show"
+                          ? "text-red-600"
+                          : "text-blue-600"
+                      }`}
+                    >
+                      {getStatus(reservation)}
+                    </div>
                   </div>
-                  <div className="text-sm text-gray-500">{reservation.confirmationNumber}</div>
-                  <div className="text-sm text-gray-500">{getStatus(reservation)}</div>
-                </li>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         ))}
       </div>
     );
   };
 
-  // Tape Chart UI
+  // Updated Tape Chart UI
   const renderTapeChart = () => {
     const roomNumbers = Array.from(
       new Set(reservations.map((reservation) => reservation.roomNumber))
     );
-    const dates = Array.from(new Set(reservations.map((reservation) => reservation.checkInDate)));
+    const dates = Array.from(
+      new Set(reservations.map((reservation) => reservation.checkInDate))
+    ).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
     return (
-      <div className="space-y-4">
-        {roomNumbers.map((roomNumber) => (
-          <div key={roomNumber} className="border-b pb-4">
-            <div className="font-semibold">Room {roomNumber}</div>
-            <div className="grid grid-cols-7 gap-1">
+      <div className="overflow-x-auto">
+        <div className="min-w-[800px]">
+          <div className="grid grid-cols-8 gap-2">
+            <div className="col-span-1 font-semibold text-gray-700">Rooms</div>
+            {dates.map((date, index) => (
+              <div
+                key={index}
+                className="col-span-1 text-center font-semibold text-gray-700"
+              >
+                {new Date(date).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                })}
+              </div>
+            ))}
+          </div>
+          {roomNumbers.map((roomNumber) => (
+            <div key={roomNumber} className="grid grid-cols-8 gap-2 py-2">
+              <div className="col-span-1 font-medium text-gray-900">
+                Room {roomNumber}
+              </div>
               {dates.map((date, index) => {
-                const isBooked = reservations.some(
-                  (reservation) =>
-                    reservation.roomNumber === roomNumber &&
-                    reservation.checkInDate === date
+                const reservation = reservations.find(
+                  (res) =>
+                    res.roomNumber === roomNumber && res.checkInDate === date
                 );
                 return (
                   <div
                     key={index}
-                    className={`h-10 ${isBooked ? "bg-blue-500" : "bg-gray-300"}`}
-                  />
+                    className={`col-span-1 h-12 rounded-lg flex items-center justify-center ${
+                      reservation
+                        ? getStatus(reservation) === "Arrival"
+                          ? "bg-green-100 text-green-800"
+                          : getStatus(reservation) === "No Show"
+                          ? "bg-red-100 text-red-800"
+                          : "bg-blue-100 text-blue-800"
+                        : "bg-gray-100 text-gray-500"
+                    }`}
+                  >
+                    {reservation ? reservation.profileName : "Available"}
+                  </div>
                 );
               })}
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     );
   };
@@ -134,7 +179,7 @@ export default function SearchReservations() {
     <div className="rounded-xl bg-white p-6 shadow-md ring-1 ring-gray-300 dark:bg-gray-900 dark:ring-gray-700">
       <div className="mb-4 text-center">
         <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-          Check-In 
+          Check-In
         </h2>
         <p className="text-sm text-gray-600 dark:text-gray-400">{currentDate}</p>
       </div>
@@ -159,19 +204,25 @@ export default function SearchReservations() {
       <div className="mt-4 mb-6 flex justify-center gap-8">
         <button
           onClick={() => switchView("list")}
-          className={`py-2 px-4 rounded-lg ${currentView === "list" ? "bg-[#5750F1] text-white" : "bg-gray-200"}`}
+          className={`py-2 px-4 rounded-lg ${
+            currentView === "list" ? "bg-[#5750F1] text-white" : "bg-gray-200"
+          }`}
         >
           List View
         </button>
         <button
           onClick={() => switchView("room")}
-          className={`py-2 px-4 rounded-lg ${currentView === "room" ? "bg-[#5750F1] text-white" : "bg-gray-200"}`}
+          className={`py-2 px-4 rounded-lg ${
+            currentView === "room" ? "bg-[#5750F1] text-white" : "bg-gray-200"
+          }`}
         >
           Room View
         </button>
         <button
           onClick={() => switchView("tape")}
-          className={`py-2 px-4 rounded-lg ${currentView === "tape" ? "bg-[#5750F1] text-white" : "bg-gray-200"}`}
+          className={`py-2 px-4 rounded-lg ${
+            currentView === "tape" ? "bg-[#5750F1] text-white" : "bg-gray-200"
+          }`}
         >
           Tape Chart
         </button>
@@ -221,25 +272,27 @@ export default function SearchReservations() {
             <tbody>
               {filteredData.length > 0 ? (
                 filteredData.map((reservation, index) => (
-                  <tr key={index} className="text-center text-gray-900 dark:text-white">
+                  <tr
+                    key={index}
+                    className="text-center text-gray-900 dark:text-white"
+                  >
                     <td className="px-5 py-4">{reservation.confirmationNumber}</td>
                     <td className="px-5 py-4">{reservation.profileName}</td>
                     <td className="px-5 py-4">{reservation.roomType}</td>
                     <td className="px-5 py-4">{reservation.roomNumber}</td>
                     <td className="px-5 py-4">{getStatus(reservation)}</td>
                     <td className="px-5 py-4">
-  <button
-    onClick={() => handleCheckIn(reservation)}
-    className={`${
-      getStatus(reservation) === "Reserved"
-        ? "bg-gray-300 text-gray-700 hover:bg-gray-400" // Reserved state (muted gray)
-        : "bg-[#5750F1] text-white hover:bg-[#4940D3]" // Check-In state (same as Search button)
-    } text-sm py-2 px-4 rounded-lg transition-all duration-300`}
-  >
-    {getStatus(reservation) === "Reserved" ? "Reserved" : "Check-In"}
-  </button>
-</td>
-
+                      <button
+                        onClick={() => handleCheckIn(reservation)}
+                        className={`${
+                          getStatus(reservation) === "Reserved"
+                            ? "bg-gray-300 text-gray-700 hover:bg-gray-400"
+                            : "bg-[#5750F1] text-white hover:bg-[#4940D3]"
+                        } text-sm py-2 px-4 rounded-lg transition-all duration-300`}
+                      >
+                        {getStatus(reservation) === "Reserved" ? "Reserved" : "Check-In"}
+                      </button>
+                    </td>
                   </tr>
                 ))
               ) : (
