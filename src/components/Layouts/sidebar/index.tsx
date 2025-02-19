@@ -6,9 +6,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { NAV_DATA } from "./data";
-import { ArrowLeftIcon, ChevronUp } from "./icons";
 import { MenuItem } from "./menu-item";
 import { useSidebarContext } from "./sidebar-context";
+import { ArrowLeftIcon } from "@/assets/icons";
+import { ChevronUp } from "lucide-react";
 
 export function Sidebar() {
   const pathname = usePathname();
