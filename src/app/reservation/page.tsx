@@ -16,9 +16,9 @@ export default function ReservationPage() {
   });
 
   const roomTypes = [
-    { value: "KNGN", label: "King Room", rate: 214, available: 5 },
-    { value: "TQNN", label: "Queen Room with Two Beds", rate: 179, available: 3 },
-    { value: "TDBN", label: "Double Room", rate: 214, available: 2 },
+    { value: "KNGN", label: "King Room", rate: 214 },
+    { value: "TQNN", label: "Queen Room with Two Beds", rate: 179 },
+    { value: "TDBN", label: "Double Room", rate: 214 },
   ];
 
   const handleIncrement = (field: string) => {
@@ -39,8 +39,6 @@ export default function ReservationPage() {
 
   const inputBaseClasses =
     "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 shadow-sm placeholder-gray-500 transition duration-150 ease-in-out focus:border-[#5750F1] focus:outline-none focus:ring-2 focus:ring-[#5750F1] dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600";
-
-  const selectedRoom = roomTypes.find((room) => room.value === formData.roomType);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-[#F9FAFB] to-[#EFF1F3] dark:from-gray-900 dark:to-gray-800">
@@ -70,7 +68,6 @@ export default function ReservationPage() {
                   setFormData((prev) => ({ ...prev, profileName: e.target.value }))
                 }
                 className={`${inputBaseClasses} pl-10`}
-                aria-label="Guest Name"
               />
             </div>
           </div>
@@ -90,7 +87,6 @@ export default function ReservationPage() {
                     setFormData((prev) => ({ ...prev, arrivalDate: e.target.value }))
                   }
                   className={`${inputBaseClasses} pl-10`}
-                  aria-label="Arrival Date"
                 />
               </div>
             </div>
@@ -107,7 +103,6 @@ export default function ReservationPage() {
                     setFormData((prev) => ({ ...prev, departureDate: e.target.value }))
                   }
                   className={`${inputBaseClasses} pl-10`}
-                  aria-label="Departure Date"
                 />
               </div>
             </div>
@@ -125,7 +120,6 @@ export default function ReservationPage() {
                   type="button"
                   onClick={() => handleDecrement("adults")}
                   className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
-                  aria-label="Decrease Adults"
                 >
                   -
                 </button>
@@ -136,7 +130,6 @@ export default function ReservationPage() {
                   type="button"
                   onClick={() => handleIncrement("adults")}
                   className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
-                  aria-label="Increase Adults"
                 >
                   +
                 </button>
@@ -153,7 +146,6 @@ export default function ReservationPage() {
                   type="button"
                   onClick={() => handleDecrement("children")}
                   className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
-                  aria-label="Decrease Children"
                 >
                   -
                 </button>
@@ -164,7 +156,6 @@ export default function ReservationPage() {
                   type="button"
                   onClick={() => handleIncrement("children")}
                   className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
-                  aria-label="Increase Children"
                 >
                   +
                 </button>
@@ -181,7 +172,6 @@ export default function ReservationPage() {
                   type="button"
                   onClick={() => handleDecrement("rooms")}
                   className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
-                  aria-label="Decrease Rooms"
                 >
                   -
                 </button>
@@ -192,7 +182,6 @@ export default function ReservationPage() {
                   type="button"
                   onClick={() => handleIncrement("rooms")}
                   className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
-                  aria-label="Increase Rooms"
                 >
                   +
                 </button>
@@ -213,46 +202,13 @@ export default function ReservationPage() {
                   setFormData((prev) => ({ ...prev, roomType: e.target.value }))
                 }
                 className={`${inputBaseClasses} pl-10`}
-                aria-label="Room Type"
               >
                 {roomTypes.map((type) => (
                   <option key={type.value} value={type.value}>
-                    {type.label} - ${type.rate}/night ({type.available} available)
+                    {type.label} - ${type.rate}/night
                   </option>
                 ))}
               </select>
-            </div>
-          </div>
-
-          {/* Summary Section */}
-          <div className="bg-white p-6 rounded-lg shadow-sm dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-              Reservation Summary
-            </h3>
-            <div className="space-y-4">
-              <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-300">Room Type:</span>
-                <span className="font-medium dark:text-white">
-                  {selectedRoom?.label}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-300">Total Nights:</span>
-                <span className="font-medium dark:text-white">
-                  {formData.arrivalDate && formData.departureDate
-                    ? Math.ceil(
-                        (new Date(formData.departureDate).getTime() -
-                          new Date(formData.arrivalDate).getTime()) /
-                          (1000 * 3600 * 24)
-                    : 0}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-300">Total Cost:</span>
-                <span className="font-medium dark:text-white">
-                  ${selectedRoom ? selectedRoom.rate * formData.rooms : 0}
-                </span>
-              </div>
             </div>
           </div>
 
