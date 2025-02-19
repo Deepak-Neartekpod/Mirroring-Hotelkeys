@@ -1,0 +1,9 @@
+.dashboard-page {
+  margin: 20px; /* Default margin */
+}
+
+@media (max-width: 768px) {
+  .dashboard-page {
+    margin: 10px; /* Adjusted margin for tablet */
+  }
+}

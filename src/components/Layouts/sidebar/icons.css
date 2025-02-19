@@ -1,0 +1,10 @@
+.icons {
+  display: flex;
+  flex-wrap: wrap; /* Allow wrapping for responsiveness */
+}
+
+@media (max-width: 768px) {
+  .icons {
+    justify-content: center; /* Center icons on tablet */
+  }
+}

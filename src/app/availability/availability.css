@@ -1,0 +1,9 @@
+.availability-page {
+  padding: 20px; /* Default padding */
+}
+
+@media (max-width: 768px) {
+  .availability-page {
+    padding: 10px; /* Adjusted padding for tablet */
+  }
+}

@@ -1,4 +1,5 @@
 import { SVGProps } from "react";
+import "./icons.css"; // Ensure you have a CSS file for styles
 
 export type PropsType = SVGProps<SVGSVGElement>;
 
@@ -16,7 +17,6 @@ export function CheckInIcon(props: PropsType) {
     </svg>
   );
 }
-
 
 export function WalkInIcon(props) {
   return (
@@ -48,8 +48,6 @@ export function CheckOutIcon(props) {
   );
 }
 
-
-
 export function AvailabilityIcon(props: PropsType) {
   return (
     <svg
@@ -79,19 +77,21 @@ export function ReservationIcon(props: PropsType) {
     </svg>
   );
 }
-  export function ReportsIcon(props: PropsType) {
-    return (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width={24}
-        height={24}
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        {...props}
-      >
-        <path d="M17 2H7c-1.1 0-1.99.9-1.99 2L5 18c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 16H7V4h10v14zm-4-7h-2v3H9v-3H7v5h5v-5zm0-4h-2v2H9V7H7V5h5v2z" />
-      </svg>
-    );
-  }
-  
+export function ReportsIcon(props: PropsType) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={24}
+      height={24}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      {...props}
+    >
+      <path d="M17 2H7c-1.1 0-1.99.9-1.99 2L5 18c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 16H7V4h10v14zm-4-7h-2v3H9v-3H7v5h5v-5zm0-4h-2v2H9V7H7V5h5v2z" />
+    </svg>
+  );
+}
 
+const Icons = () => {
+  return <div className="icons">{/* Icon content */}</div>;
+};

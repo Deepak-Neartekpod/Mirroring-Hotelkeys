@@ -1,12 +1,13 @@
 import { Button } from "@/components/ui-elements/button";
 import { ShowcaseSection } from "@/components/Layouts/showcase-section";
 import data from "@/data/data";
+import "./dashboard.css"; // Ensure you have a CSS file for styles
 
 const Dashboard = () => {
   console.log("jfsdkcxf", data);
 
   return (
-    <div className="bg-gray-100 p-5 dark:bg-gray-900">
+    <div className="dashboard-page bg-gray-100 p-5 dark:bg-gray-900">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <ShowcaseSection title="House">
           <div className="grid grid-cols-2 gap-4">
@@ -50,7 +51,9 @@ const Dashboard = () => {
             </a>
             <div className="rounded-lg bg-white p-4 shadow-md">
               <h2 className="text-xl font-semibold">
-                <span className="font-bold">{data.bookings.noShowLateCancel}</span>
+                <span className="font-bold">
+                  {data.bookings.noShowLateCancel}
+                </span>
               </h2>
               <p>No Show/Late Cancel</p>
             </div>
@@ -73,7 +76,9 @@ const Dashboard = () => {
           <div className="grid grid-cols-2 gap-4">
             <div className="rounded-lg bg-white p-4 shadow-md">
               <h2 className="text-xl font-semibold">
-                <span className="font-bold">{data.availability.totalRooms}</span>
+                <span className="font-bold">
+                  {data.availability.totalRooms}
+                </span>
               </h2>
               <p>Total Rooms</p>
             </div>

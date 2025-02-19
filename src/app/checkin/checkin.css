@@ -1,0 +1,9 @@
+.checkin-page {
+  margin: 20px; /* Default margin */
+}
+
+@media (max-width: 768px) {
+  .checkin-page {
+    margin: 10px; /* Adjusted margin for tablet */
+  }
+}
