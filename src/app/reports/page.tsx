@@ -18,7 +18,7 @@ export default function ReportsPage() {
 
   return (
     <div className="reports-page">
-      <div className="bg-default min-h-screen">
+      <div className="min-h-screen bg-white">
         <div className="bg-header w-full p-4">
           <h1 className="text-title text-center text-2xl font-semibold">
             Reports
