@@ -1,54 +1,10 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-import {
-  FileText,
-  Users,
-  Calendar,
-  Home as HomeIcon,
-  Phone,
-  Film,
-  PieChart,
-  ClipboardList,
-} from "lucide-react";
+
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
-const reports = [
-  {
-    id: 1,
-    name: "Daily Financial Report",
-    icon: <FileText className="h-6 w-6" />,
-  },
-  {
-    id: 2,
-    name: "Monthly Financial Report",
-    icon: <FileText className="h-6 w-6" />,
-  },
-  {
-    id: 3,
-    name: "Yearly Financial Report",
-    icon: <FileText className="h-6 w-6" />,
-  },
-  {
-    id: 4,
-    name: "Reservation Reports",
-    icon: <Calendar className="h-6 w-6" />,
-  },
-  {
-    id: 5,
-    name: "Housekeeping Report",
-    icon: <HomeIcon className="h-6 w-6" />,
-  },
-  { id: 6, name: "Occupancy Report", icon: <Users className="h-6 w-6" /> },
-  { id: 7, name: "Guest Reports", icon: <Users className="h-6 w-6" /> },
-  { id: 8, name: "Shift Reports", icon: <ClipboardList className="h-6 w-6" /> },
-  { id: 9, name: "Guest Tracking", icon: <Users className="h-6 w-6" /> },
-  { id: "A", name: "Phone House Account", icon: <Phone className="h-6 w-6" /> },
-  { id: "B", name: "Phone Miscellaneous", icon: <Phone className="h-6 w-6" /> },
-  { id: "C", name: "P.O.S & Movie Logs", icon: <Film className="h-6 w-6" /> },
-  { id: "G", name: "Charts & Graphs", icon: <PieChart className="h-6 w-6" /> },
-];
+import { reports } from "@/data/data";
 
 export default function ReportsPage() {
   const router = useRouter();
