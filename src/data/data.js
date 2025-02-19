@@ -168,10 +168,6 @@ export const reports = [
   },
   { id: 6, name: "Occupancy Report", icon: <Users className="h-6 w-6" /> },
   { id: 7, name: "Guest Reports", icon: <Users className="h-6 w-6" /> },
-  { id: 8, name: "Shift Reports", icon: <ClipboardList className="h-6 w-6" /> },
   { id: 9, name: "Guest Tracking", icon: <Users className="h-6 w-6" /> },
-  { id: "A", name: "Phone House Account", icon: <Phone className="h-6 w-6" /> },
-  { id: "B", name: "Phone Miscellaneous", icon: <Phone className="h-6 w-6" /> },
-  { id: "C", name: "P.O.S & Movie Logs", icon: <Film className="h-6 w-6" /> },
-  { id: "G", name: "Charts & Graphs", icon: <PieChart className="h-6 w-6" /> },
+  
 ];
