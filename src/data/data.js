@@ -41,6 +41,14 @@ const data = {
   },
 };
 
+export const idValues = {
+  KNGN: { label: "King Non-Smoking", price: 214 },
+  TQNN: { label: "Two Queen Beds Non-Smoking", price: 179 },
+  TDBN: { label: "Two Double Beds Non-Smoking", price: 214 },
+  KNGS: { label: "King Smoking", price: 214 },
+  QQNS: { label: "Queen-Queen Non-Smoking", price: 179 },
+};
+
 export default data;
 
 export const walkInData = [
