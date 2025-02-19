@@ -36,7 +36,7 @@ export default function SearchCheckouts() {
     <div className="rounded-xl bg-white p-6 shadow-md ring-1 ring-gray-300 dark:bg-gray-900 dark:ring-gray-700">
       <div className="mb-4 text-center">
         <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-          Check-out Reservation
+          Check-out 
         </h2>
         <p className="text-sm text-gray-600 dark:text-gray-400">{currentDate}</p>
       </div>

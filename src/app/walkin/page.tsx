@@ -72,7 +72,7 @@ export default function WalkInPage() {
       if (availableRooms.length > 0) {
         const assignedRoom = availableRooms[0];
         setCheckInMessage(
-          `Check-in successful! ${data.name} has been assigned ${assignedRoom}.`
+          `Walk-in successful! ${data.name} has been assigned ${assignedRoom}.`
         );
       } else {
         setCheckInMessage("Selected room type is not available.");
@@ -226,7 +226,7 @@ export default function WalkInPage() {
           <Button
             type="submit"
             disabled={isProcessing}
-            label={isProcessing ? "Processing..." : "Check-In"}
+            label={isProcessing ? "Processing..." : "Walk-In"}
             icon={
               isProcessing ? (
                 <div className="w-5 h-5 border-t-2 border-white border-solid rounded-full animate-spin"></div>
