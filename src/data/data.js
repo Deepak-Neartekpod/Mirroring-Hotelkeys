@@ -1,13 +1,3 @@
-import {
-  FileText,
-  Users,
-  Calendar,
-  Home as HomeIcon,
-  Phone,
-  Film,
-  PieChart,
-  ClipboardList,
-} from "lucide-react";
 const data = {
   rooms: [
     {
@@ -62,40 +52,33 @@ export const idValues = {
 export default data;
 
 export const walkInData = [
-  {
-    name: "John Doe",
-    contact: "123-456-7890",
-    identification: "A12345678",
-    roomType: "KNGN",
-    paymentMethod: "creditCard",
-    loyalty: true,
-    checkInDate: "2025-02-17",
-    assignedRoom: "Room 1 - $214",
-    status: "Checked-in",
+  { 
+    name: "John Doe", 
+    assignedRoom: "Room 101", 
+    status: "Available", 
+    roomType: "KNGN", 
+    rate: 214, 
+    paymentMethods: ["creditCard", "cash"] 
   },
-  {
-    name: "Jane Smith",
-    contact: "987-654-3210",
-    identification: "B87654321",
-    roomType: "TQNN",
-    paymentMethod: "cash",
-    loyalty: false,
-    checkInDate: "2025-02-17",
-    assignedRoom: "Room 2 - $179",
-    status: "Checked-in",
+  { 
+    name: "Jane Smith", 
+    assignedRoom: "Room 200", 
+    status: "Available", 
+    roomType: "TQNN", 
+    rate: 179, 
+    paymentMethods: ["creditCard", "cash"] 
   },
-  {
-    name: "Alice Johnson",
-    contact: "555-123-4567",
-    identification: "C54321789",
-    roomType: "TDBN",
-    paymentMethod: "creditCard",
-    loyalty: false,
-    checkInDate: "2025-02-18",
-    assignedRoom: "Room 3 - $214",
-    status: "Checked-in",
-  },
+  { 
+    name: "Michael Johnson", 
+    assignedRoom: "Room 310", 
+    status: "Checked-in", 
+    roomType: "TDBN", 
+    rate: 214, 
+    paymentMethods: ["creditCard", "cash"] 
+  }
 ];
+
+export const roomTypeOptions = ["KNGN", "TQNN", "TDBN"];
 
 export const bookingData = [
   {
@@ -104,7 +87,10 @@ export const bookingData = [
     roomType: "KNGN", // King Non-Smoking
     roomNumber: "101",
     checkInDate: "2025-02-17", // Today's date
-    status: "Arrival", // Initial status
+    checkOutDate: "2025-02-19", // Departure date
+    status: "Checked-out", // Status after departure
+    totalCharges: 500, // Total charges including room rate, taxes, and additional services
+    paymentStatus: "Paid", // Payment status
   },
   {
     profileName: "Jane Smith",
@@ -112,7 +98,10 @@ export const bookingData = [
     roomType: "TQNN", // Two Queen Beds Non-Smoking
     roomNumber: "202",
     checkInDate: "2025-02-17", // Today's date
-    status: "Arrival", // Initial status
+    checkOutDate: "2025-02-20", // Departure date
+    status: "Checked-out", // Status after departure
+    totalCharges: 450, // Total charges including room rate, taxes, and additional services
+    paymentStatus: "Pending", // Payment status
   },
   {
     profileName: "Alice Johnson",
@@ -120,7 +109,10 @@ export const bookingData = [
     roomType: "TDBN", // Two Double Beds Non-Smoking
     roomNumber: "303",
     checkInDate: "2025-02-20", // Future date
+    checkOutDate: "2025-02-22", // Departure date
     status: "Reserved", // Initial status
+    totalCharges: 600, // Total charges including room rate, taxes, and additional services
+    paymentStatus: "Pending", // Payment status
   },
   {
     profileName: "Michael Brown",
@@ -128,7 +120,10 @@ export const bookingData = [
     roomType: "KNGS", // King Smoking
     roomNumber: "104",
     checkInDate: "2025-02-19", // Future date
+    checkOutDate: "2025-02-21", // Departure date
     status: "Reserved", // Initial status
+    totalCharges: 550, // Total charges including room rate, taxes, and additional services
+    paymentStatus: "Pending", // Payment status
   },
   {
     profileName: "Emily Davis",
@@ -136,7 +131,10 @@ export const bookingData = [
     roomType: "QQNS", // Queen-Queen Non-Smoking
     roomNumber: "205",
     checkInDate: "2025-02-18", // Future date
+    checkOutDate: "2025-02-20", // Departure date
     status: "Reserved", // Initial status
+    totalCharges: 400, // Total charges including room rate, taxes, and additional services
+    paymentStatus: "Pending", // Payment status
   },
 ];
 
@@ -144,34 +142,32 @@ export const reports = [
   {
     id: 1,
     name: "Daily Financial Report",
-    icon: <FileText className="h-6 w-6" />,
   },
   {
     id: 2,
     name: "Monthly Financial Report",
-    icon: <FileText className="h-6 w-6" />,
   },
   {
     id: 3,
     name: "Yearly Financial Report",
-    icon: <FileText className="h-6 w-6" />,
   },
   {
     id: 4,
     name: "Reservation Reports",
-    icon: <Calendar className="h-6 w-6" />,
   },
   {
     id: 5,
     name: "Housekeeping Report",
-    icon: <HomeIcon className="h-6 w-6" />,
   },
-  { id: 6, name: "Occupancy Report", icon: <Users className="h-6 w-6" /> },
-  { id: 7, name: "Guest Reports", icon: <Users className="h-6 w-6" /> },
-  { id: 8, name: "Shift Reports", icon: <ClipboardList className="h-6 w-6" /> },
-  { id: 9, name: "Guest Tracking", icon: <Users className="h-6 w-6" /> },
-  { id: "A", name: "Phone House Account", icon: <Phone className="h-6 w-6" /> },
-  { id: "B", name: "Phone Miscellaneous", icon: <Phone className="h-6 w-6" /> },
-  { id: "C", name: "P.O.S & Movie Logs", icon: <Film className="h-6 w-6" /> },
-  { id: "G", name: "Charts & Graphs", icon: <PieChart className="h-6 w-6" /> },
+  { id: 6, name: "Occupancy Report" },
+  { id: 7, name: "Guest Reports"},
+  { id: 9, name: "Guest Tracking"},
+];
+
+
+
+export const roomTypes = [
+  { value: "KNGN", label: "King Room", rate: 214 },
+  { value: "TQNN", label: "Queen Room with Two Beds", rate: 179 },
+  { value: "TDBN", label: "Double Room", rate: 214 },
 ];

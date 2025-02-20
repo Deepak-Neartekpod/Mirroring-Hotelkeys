@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Button } from "@/components/ui-elements/button";
-import { CheckCircle, User, Phone, CreditCard, Gift } from "lucide-react";
+import { CheckCircle, User, Phone, CreditCard } from "lucide-react";
 import { walkInData } from "@/data/data";
 
 type GuestInfo = {
@@ -28,29 +28,29 @@ export default function WalkInPage() {
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [checkInMessage, setCheckInMessage] = useState<string>("");
 
-  const availableRoomTypes = walkInData.filter(
-    (guest) => guest.status === "Checked-in"
-  );
-  const availableRoomsList = availableRoomTypes.map(
-    (guest) => guest.assignedRoom
-  );
-
-  const roomsData: { [key: string]: string[] } = {
-    KNGN: ["Room 101 - $214"],
-    TQNN: ["Room 200 - $179"],
-    TDBN: ["Room 310 - $214"],
-  };
-
-  const roomRates: { [key: string]: number } = {
-    KNGN: 214,
-    TQNN: 179,
-    TDBN: 214,
-  };
+  // Dynamically extract available room types and their assigned rooms
+  const availableRoomTypes = walkInData
+    .filter((guest) => guest.status === "Available")
+    .reduce<{ [key: string]: { rooms: string[]; rate: number } }>(
+      (acc, guest) => {
+        if (!acc[guest.roomType]) {
+          acc[guest.roomType] = { rooms: [], rate: guest.rate };
+        }
+        acc[guest.roomType].rooms.push(guest.assignedRoom);
+        return acc;
+      },
+      {}
+    );
 
   const onRoomTypeChange = (roomType: string) => {
     setTimeout(() => {
-      setAvailableRooms(roomsData[roomType] || []);
-      setSelectedRate(roomRates[roomType] || null);
+      if (availableRoomTypes[roomType]) {
+        setAvailableRooms(availableRoomTypes[roomType].rooms);
+        setSelectedRate(availableRoomTypes[roomType].rate);
+      } else {
+        setAvailableRooms([]);
+        setSelectedRate(null);
+      }
     }, 500);
   };
 
@@ -88,15 +88,13 @@ export default function WalkInPage() {
     <div className="rounded-xl bg-white p-8 shadow-lg ring-1 ring-gray-300 dark:bg-gray-900 dark:ring-gray-700">
       <div className="mb-8 text-center">
         <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-          Walk-In 
+          Walk-In
         </h2>
-        
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Guest Information Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Name Field */}
           <div>
             <label className="block font-medium text-gray-800 dark:text-white">
               Guest Name
@@ -115,7 +113,6 @@ export default function WalkInPage() {
             )}
           </div>
 
-          {/* Contact Field */}
           <div>
             <label className="block font-medium text-gray-800 dark:text-white">
               Contact Number
@@ -135,7 +132,6 @@ export default function WalkInPage() {
           </div>
         </div>
 
-        {/* Identification Field */}
         <div>
           <label className="block font-medium text-gray-800 dark:text-white">
             Identification
@@ -163,9 +159,11 @@ export default function WalkInPage() {
             className={inputBaseClasses}
           >
             <option value="">Select Room Type</option>
-            <option value="KNGN">King Non-Smoking</option>
-            <option value="TQNN">Two Queen Beds Non-Smoking</option>
-            <option value="TDBN">Two Double Beds Non-Smoking</option>
+            {Object.keys(availableRoomTypes).map((roomType) => (
+              <option key={roomType} value={roomType}>
+                {roomType}
+              </option>
+            ))}
           </select>
           {errors.roomType && (
             <span className="text-red-500">{errors.roomType.message}</span>
@@ -198,51 +196,31 @@ export default function WalkInPage() {
           </div>
         )}
 
-        {/* Payment Method */}
         <div>
           <label className="block font-medium text-gray-800 dark:text-white">
             Payment Method
           </label>
-          <div className="relative">
-            <CreditCard className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-            <select
-              {...register("paymentMethod", {
-                required: "Payment method is required",
-              })}
-              className={`${inputBaseClasses} pl-10`}
-            >
-              <option value="">Select Payment Method</option>
-              <option value="creditCard">Credit Card</option>
-              <option value="cash">Cash</option>
-            </select>
-          </div>
+          <select
+            {...register("paymentMethod", {
+              required: "Payment method is required",
+            })}
+            className={inputBaseClasses}
+          >
+            <option value="">Select Payment Method</option>
+            <option value="creditCard">Credit Card</option>
+            <option value="cash">Cash</option>
+          </select>
           {errors.paymentMethod && (
             <span className="text-red-500">{errors.paymentMethod.message}</span>
           )}
         </div>
 
-        {/* Check-in Button */}
         <div className="flex justify-center">
-          <Button
-            type="submit"
-            disabled={isProcessing}
-            label={isProcessing ? "Processing..." : "Walk-In"}
-            icon={
-              isProcessing ? (
-                <div className="w-5 h-5 border-t-2 border-white border-solid rounded-full animate-spin"></div>
-              ) : (
-                <CheckCircle className="h-5 w-5" />
-              )
-            }
-          />
+          <Button type="submit" disabled={isProcessing} label="Walk-In" />
         </div>
       </form>
 
-      {checkInMessage && (
-        <div className="mt-6 p-4 bg-green-100 rounded-lg text-center text-green-700 dark:bg-green-900 dark:text-green-200">
-          {checkInMessage}
-        </div>
-      )}
+      {checkInMessage && <div className="mt-6 text-center">{checkInMessage}</div>}
     </div>
   );
 }
