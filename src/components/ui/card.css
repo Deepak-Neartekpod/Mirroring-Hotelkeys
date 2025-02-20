@@ -1,0 +1,9 @@
+.card {
+  width: 300px; /* Default width */
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: 100%; /* Full width for tablet */
+  }
+}

@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui-elements/button";
 import data from "@/data/data";
+import "./availability.css"; // Ensure you have a CSS file for styles
 
 export default function Availability() {
   // Current date/time
@@ -33,7 +34,7 @@ export default function Availability() {
   );
 
   return (
-    <div className="bg-gray-100 p-6 dark:bg-gray-900">
+    <div className="availability-page bg-gray-100 p-6 dark:bg-gray-900">
       {/* Header */}
       <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
         <h1 className="text-2xl font-semibold">{currentDateString}</h1>

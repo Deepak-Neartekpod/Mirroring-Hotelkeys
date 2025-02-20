@@ -10,6 +10,7 @@ import { MenuItem } from "./menu-item";
 import { useSidebarContext } from "./sidebar-context";
 import { ArrowLeftIcon } from "@/assets/icons";
 import { ChevronUp } from "lucide-react";
+import "./sidebar.css"; // Ensure you have a CSS file for styles
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -26,7 +27,7 @@ export function Sidebar() {
   };
 
   return (
-    <>
+    <div className="sidebar">
       {/* Mobile Overlay */}
       {isMobile && isOpen && (
         <div
@@ -161,6 +162,6 @@ export function Sidebar() {
           </div>
         </div>
       </aside>
-    </>
+    </div>
   );
 }
