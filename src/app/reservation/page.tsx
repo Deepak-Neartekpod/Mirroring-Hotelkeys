@@ -3,18 +3,20 @@
 import { useState } from "react";
 import { Button } from "@/components/ui-elements/button";
 import { User, Calendar, BedDouble, CheckCircle, Hash, Key } from "lucide-react";
-import { roomTypes } from "@/data/data"; // Ensure data is imported
+import { idValues } from "@/data/data";
 
 export default function ReservationPage() {
   const [formData, setFormData] = useState({
     profileName: "",
     adults: 1,
-    children: 0,
     rooms: 1,
-    roomType: roomTypes.length > 0 ? roomTypes[0].value : "",
+    roomType: Object.keys(idValues)[0],
     arrivalDate: "",
     departureDate: "",
   });
+
+  // Add new state for nights
+  const [nights, setNights] = useState<number | string>('');
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [bookingSummary, setBookingSummary] = useState<any>(null);
@@ -31,14 +33,64 @@ export default function ReservationPage() {
     }));
   };
 
+  // Add this function to handle name input validation
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Only allow letters and spaces
+    if (value === '' || /^[A-Za-z\s]*$/.test(value)) {
+      setFormData((prev) => ({ ...prev, profileName: value }));
+    }
+  };
+
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    if (!formData.profileName) newErrors.profileName = "Guest name is required.";
-    if (!formData.arrivalDate) newErrors.arrivalDate = "Arrival date is required.";
-    if (!formData.departureDate) newErrors.departureDate = "Departure date is required.";
-    if (new Date(formData.arrivalDate) >= new Date(formData.departureDate)) {
+
+    // Enhanced profile name validation
+    if (!formData.profileName.trim()) {
+      newErrors.profileName = "Guest name is required.";
+    } else if (formData.profileName.length < 3) {
+      newErrors.profileName = "Guest name must be at least 3 characters.";
+    } else if (!/^[A-Za-z\s]+$/.test(formData.profileName)) {
+      newErrors.profileName = "Guest name can only contain letters.";
+    }
+
+    // Date validations
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+    const arrivalDate = new Date(formData.arrivalDate);
+    const departureDate = new Date(formData.departureDate);
+
+    if (!formData.arrivalDate) {
+      newErrors.arrivalDate = "Arrival date is required.";
+    } else if (arrivalDate < currentDate) {
+      newErrors.arrivalDate = "Arrival date cannot be in the past.";
+    }
+
+    if (!formData.departureDate) {
+      newErrors.departureDate = "Departure date is required.";
+    } else if (departureDate <= arrivalDate) {
       newErrors.departureDate = "Departure date must be after arrival date.";
     }
+
+    // Adults validation
+    if (formData.adults < 1) {
+      newErrors.adults = "At least 1 adult is required.";
+    } else if (formData.adults > 4) {
+      newErrors.adults = "Maximum 4 adults allowed per booking.";
+    }
+
+    // Rooms validation
+    if (formData.rooms < 1) {
+      newErrors.rooms = "At least 1 room is required.";
+    } else if (formData.rooms > 5) {
+      newErrors.rooms = "Maximum 5 rooms allowed per booking.";
+    }
+
+    // Room type validation
+    if (!formData.roomType || !idValues[formData.roomType as keyof typeof idValues]) {
+      newErrors.roomType = "Please select a valid room type.";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -53,51 +105,49 @@ export default function ReservationPage() {
     return (Math.floor(100 + Math.random() * 900)).toString().slice(0, 3);
   };
 
+  // Update the calculate nights function
+  const calculateNights = (arrival: string, departure: string) => {
+    if (!arrival || !departure) return '';
+    const start = new Date(arrival);
+    const end = new Date(departure);
+    const diffTime = end.getTime() - start.getTime();
+    const nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return nights > 0 ? nights : '';
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
 
     setIsLoading(true);
 
-    // Simulate API call to check availability
-    const isAvailable = await checkAvailability(formData);
-    if (!isAvailable) {
-      alert("Selected room type is unavailable for the chosen dates. Please try different dates or room type.");
-      setIsLoading(false);
-      return;
-    }
-
-    // Generate confirmation number and room number
-    const confirmationNumber = generateConfirmationNumber();
-    const roomNumber = generateRoomNumber();
-
-    // Calculate total cost
-    const selectedRoom = roomTypes.find((room) => room.value === formData.roomType);
+    // Update room type handling
+    const selectedRoom = idValues[formData.roomType as keyof typeof idValues];
     const nights = Math.ceil(
       (new Date(formData.departureDate).getTime() - new Date(formData.arrivalDate).getTime()) / (1000 * 3600 * 24)
     );
-    const totalCost = selectedRoom ? selectedRoom.rate * nights * formData.rooms : 0;
+    const totalCost = selectedRoom ? selectedRoom.price * nights * formData.rooms : 0;
 
-    // Set booking summary with new fields
+    // Set booking summary with updated room type handling
     setBookingSummary({
-      confirmationNumber,
-      roomNumber,
+      confirmationNumber: generateConfirmationNumber(),
+      roomNumber: generateRoomNumber(),
       profileName: formData.profileName,
       arrivalDate: formData.arrivalDate,
       departureDate: formData.departureDate,
       roomType: selectedRoom?.label,
+      roomTypeCode: formData.roomType,
       adults: formData.adults,
-      children: formData.children,
       rooms: formData.rooms,
       totalCost: totalCost.toFixed(2),
     });
 
     // Update the bookingData array (assuming it's imported from @/data/data)
     const newBooking = {
-      confirmationNumber,
+      confirmationNumber: generateConfirmationNumber(),
       profileName: formData.profileName,
       roomType: selectedRoom?.label || "",
-      roomNumber,
+      roomNumber: generateRoomNumber(),
       checkInDate: formData.arrivalDate,
     };
 
@@ -115,14 +165,13 @@ export default function ReservationPage() {
     // Simulate payment processing
     const paymentSuccess = await processPayment(bookingSummary);
     if (paymentSuccess) {
-      alert("Booking confirmed! A confirmation email has been sent to your inbox.");
+      alert("Booking confirmed!");
       setBookingSummary(null); // Reset form after successful booking
       setFormData({
         profileName: "",
         adults: 1,
-        children: 0,
         rooms: 1,
-        roomType: roomTypes.length > 0 ? roomTypes[0].value : "",
+        roomType: Object.keys(idValues)[0],
         arrivalDate: "",
         departureDate: "",
       });
@@ -137,157 +186,215 @@ export default function ReservationPage() {
     "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 shadow-sm placeholder-gray-500 focus:border-[#5750F1] focus:outline-none focus:ring-2 focus:ring-[#5750F1]";
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-[#F9FAFB] to-[#EFF1F3]">
-      <div className="rounded-xl bg-white p-8 shadow-2xl max-w-4xl w-full">
-        <div className="mb-8 text-center">
-          <h2 className="text-4xl font-bold text-gray-900">Make a Reservation</h2>
-          <p className="mt-2 text-gray-600">
-            Experience luxury and comfort like never before.
-          </p>
-        </div>
+    <div className="rounded-xl bg-white p-6 shadow-md ring-1 ring-gray-300 dark:bg-gray-900 dark:ring-gray-700">
+      <div className="mb-4 text-center">
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+          Make a Reservation
+        </h2>
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          Experience luxury and comfort like never before.
+        </p>
+      </div>
 
-        {bookingSummary ? (
-          <div className="space-y-8 animate-fadeIn">
-            <div className="flex items-center space-x-4 pb-6 border-b border-gray-100">
-              <div className="p-3 bg-[#5750F1]/10 rounded-full">
-                <CheckCircle className="h-6 w-6 text-[#5750F1]" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900">Booking Summary</h3>
+      {bookingSummary ? (
+        <div className="space-y-8 animate-fadeIn">
+          <div className="flex items-center space-x-4 pb-6 border-b border-gray-100">
+            <div className="p-3 bg-[#5750F1]/10 rounded-full">
+              <CheckCircle className="h-6 w-6 text-[#5750F1]" />
             </div>
+            <h3 className="text-2xl font-bold text-gray-900">Booking Summary</h3>
+          </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Primary Details Card */}
-              <div className="bg-gray-50 rounded-xl p-6 space-y-4">
-                <div className="flex items-center space-x-3">
-                  <Hash className="h-5 w-5 text-[#5750F1]" />
-                  <div>
-                    <p className="text-sm text-gray-500">Confirmation Number</p>
-                    <p className="font-semibold text-gray-900">{bookingSummary.confirmationNumber}</p>
-                  </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Primary Details Card */}
+            <div className="bg-gray-50 rounded-xl p-6 space-y-4">
+              <div className="flex items-center space-x-3">
+                <Hash className="h-5 w-5 text-[#5750F1]" />
+                <div>
+                  <p className="text-sm text-gray-500">Confirmation Number</p>
+                  <p className="font-semibold text-gray-900">{bookingSummary.confirmationNumber}</p>
                 </div>
+              </div>
 
-                <div className="flex items-center space-x-3">
-                  <Key className="h-5 w-5 text-[#5750F1]" />
-                  <div>
-                    <p className="text-sm text-gray-500">Room Number</p>
-                    <p className="font-semibold text-gray-900">{bookingSummary.roomNumber}</p>
-                  </div>
+              <div className="flex items-center space-x-3">
+                <Key className="h-5 w-5 text-[#5750F1]" />
+                <div>
+                  <p className="text-sm text-gray-500">Room Number</p>
+                  <p className="font-semibold text-gray-900">{bookingSummary.roomNumber}</p>
                 </div>
+              </div>
 
-                <div className="flex items-center space-x-3">
-                  <User className="h-5 w-5 text-[#5750F1]" />
-                  <div>
-                    <p className="text-sm text-gray-500">Guest Name</p>
-                    <p className="font-semibold text-gray-900">{bookingSummary.profileName}</p>
-                  </div>
+              <div className="flex items-center space-x-3">
+                <User className="h-5 w-5 text-[#5750F1]" />
+                <div>
+                  <p className="text-sm text-gray-500">Guest Name</p>
+                  <p className="font-semibold text-gray-900">{bookingSummary.profileName}</p>
                 </div>
-                
-                <div className="flex items-center space-x-3">
-                  <Calendar className="h-5 w-5 text-[#5750F1]" />
-                  <div>
-                    <div className="space-y-1">
-                      <div>
-                        <p className="text-sm text-gray-500">Check-in</p>
-                        <p className="font-semibold text-gray-900">{bookingSummary.arrivalDate}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-500">Check-out</p>
-                        <p className="font-semibold text-gray-900">{bookingSummary.departureDate}</p>
-                      </div>
+              </div>
+              
+              <div className="flex items-center space-x-3">
+                <Calendar className="h-5 w-5 text-[#5750F1]" />
+                <div>
+                  <div className="space-y-1">
+                    <div>
+                      <p className="text-sm text-gray-500">Check-in</p>
+                      <p className="font-semibold text-gray-900">{bookingSummary.arrivalDate}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Check-out</p>
+                      <p className="font-semibold text-gray-900">{bookingSummary.departureDate}</p>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
 
-              {/* Secondary Details Card */}
-              <div className="bg-gray-50 rounded-xl p-6 space-y-4">
-                <div className="flex items-center space-x-3">
-                  <BedDouble className="h-5 w-5 text-[#5750F1]" />
-                  <div>
-                    <p className="text-sm text-gray-500">Room Details</p>
-                    <p className="font-semibold text-gray-900">{bookingSummary.roomType}</p>
-                    <p className="text-sm text-gray-600">
-                      {bookingSummary.rooms} {bookingSummary.rooms === 1 ? 'room' : 'rooms'} · 
-                      {bookingSummary.adults} {bookingSummary.adults === 1 ? 'adult' : 'adults'} · 
-                      {bookingSummary.children} {bookingSummary.children === 1 ? 'child' : 'children'}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-4 pt-4 border-t border-gray-200">
-                  <p className="text-sm text-gray-500">Total Cost</p>
-                  <p className="text-2xl font-bold text-[#5750F1]">${bookingSummary.totalCost}</p>
+            {/* Secondary Details Card */}
+            <div className="bg-gray-50 rounded-xl p-6 space-y-4">
+              <div className="flex items-center space-x-3">
+                <BedDouble className="h-5 w-5 text-[#5750F1]" />
+                <div>
+                  <p className="text-sm text-gray-500">Room Details</p>
+                  <p className="font-semibold text-gray-900">{bookingSummary.roomType}</p>
+                  <p className="text-sm text-gray-600">
+                    {bookingSummary.rooms} {bookingSummary.rooms === 1 ? 'room' : 'rooms'} · 
+                    {bookingSummary.adults} {bookingSummary.adults === 1 ? 'adult' : 'adults'}
+                  </p>
                 </div>
               </div>
-            </div>
 
-            <div className="flex justify-center pt-6">
-              <Button
-                type="button"
-                label="Confirm and Pay"
-                icon={<CheckCircle className="h-5 w-5" />}
-                onClick={handlePayment}
-                disabled={isLoading}
-                className="bg-[#5750F1] hover:bg-[#4740E1] transform transition-transform hover:scale-105"
-              />
+              <div className="mt-4 pt-4 border-t border-gray-200">
+                <p className="text-sm text-gray-500">Total Cost</p>
+                <p className="text-2xl font-bold text-[#5750F1]">${bookingSummary.totalCost}</p>
+              </div>
             </div>
           </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="space-y-8">
-            {/* Guest Name */}
-            <div>
-              <label className="block font-medium text-gray-800 mb-2">Guest Name</label>
+
+          <div className="flex justify-center pt-6">
+            <Button
+              type="button"
+              label="Confirm and Pay"
+              icon={<CheckCircle className="h-5 w-5" />}
+              onClick={handlePayment}
+              disabled={isLoading}
+              className="bg-[#5750F1] hover:bg-[#4740E1] transform transition-transform hover:scale-105"
+            />
+          </div>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Guest Name */}
+          <div>
+            <label className="block font-medium text-gray-800 mb-2">Guest Name</label>
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Enter guest name"
+                value={formData.profileName}
+                onChange={handleNameChange}
+                className={`${inputBaseClasses} pl-10`}
+              />
+            </div>
+            {errors.profileName && <p className="text-red-500 text-sm mt-1">{errors.profileName}</p>}
+          </div>
+
+          {/* Dates in one row */}
+          <div className="flex gap-4">
+            <div className="flex-1">
+              <label className="block font-medium text-gray-800 mb-2">Check-In Date</label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
-                  type="text"
-                  placeholder="Enter guest name"
-                  value={formData.profileName}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, profileName: e.target.value }))
-                  }
+                  type="date"
+                  value={formData.arrivalDate}
+                  onChange={(e) => {
+                    const newArrivalDate = e.target.value;
+                    setFormData((prev) => ({ ...prev, arrivalDate: newArrivalDate }));
+                    setNights(calculateNights(newArrivalDate, formData.departureDate));
+                  }}
                   className={`${inputBaseClasses} pl-10`}
                 />
               </div>
-              {errors.profileName && <p className="text-red-500 text-sm mt-1">{errors.profileName}</p>}
+              {errors.arrivalDate && <p className="text-red-500 text-sm mt-1">{errors.arrivalDate}</p>}
             </div>
 
-            {/* Arrival & Departure Dates */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block font-medium text-gray-800 mb-2">Arrival Date</label>
-                <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                  <input
-                    type="date"
-                    value={formData.arrivalDate}
-                    onChange={(e) =>
-                      setFormData((prev) => ({ ...prev, arrivalDate: e.target.value }))
-                    }
-                    className={`${inputBaseClasses} pl-10`}
-                  />
-                </div>
-                {errors.arrivalDate && <p className="text-red-500 text-sm mt-1">{errors.arrivalDate}</p>}
+            <div className="flex-1">
+              <label className="block font-medium text-gray-800 mb-2">Check-out Date</label>
+              <div className="relative">
+                <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  type="date"
+                  value={formData.departureDate}
+                  onChange={(e) => {
+                    const newDepartureDate = e.target.value;
+                    setFormData((prev) => ({ ...prev, departureDate: newDepartureDate }));
+                    setNights(calculateNights(formData.arrivalDate, newDepartureDate));
+                  }}
+                  className={`${inputBaseClasses} pl-10`}
+                />
               </div>
-              <div>
-                <label className="block font-medium text-gray-800 mb-2">Departure Date</label>
-                <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                  <input
-                    type="date"
-                    value={formData.departureDate}
-                    onChange={(e) =>
-                      setFormData((prev) => ({ ...prev, departureDate: e.target.value }))
-                    }
-                    className={`${inputBaseClasses} pl-10`}
-                  />
-                </div>
-                {errors.departureDate && <p className="text-red-500 text-sm mt-1">{errors.departureDate}</p>}
+              {errors.departureDate && <p className="text-red-500 text-sm mt-1">{errors.departureDate}</p>}
+            </div>
+
+            <div className="w-32">
+              <label className="block font-medium text-gray-800 mb-2">Nights</label>
+              <input
+                type="text"
+                value={nights}
+                readOnly
+                className={`${inputBaseClasses} bg-gray-50`}
+                placeholder="Nights"
+              />
+            </div>
+          </div>
+
+          {/* Guest Counts and Room Type in one row */}
+          <div className="flex gap-6">
+            <div className="flex-1 bg-white p-4 rounded-lg shadow-sm">
+              <label className="block font-medium text-gray-800 mb-2">Adults</label>
+              <div className="flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={() => handleDecrement("adults")}
+                  className="p-2 rounded-full bg-gray-100 hover:bg-gray-200"
+                >
+                  -
+                </button>
+                <span className="text-lg font-medium">{formData.adults}</span>
+                <button
+                  type="button"
+                  onClick={() => handleIncrement("adults")}
+                  className="p-2 rounded-full bg-gray-100 hover:bg-gray-200"
+                >
+                  +
+                </button>
+              </div>
+              {errors.adults && <p className="text-red-500 text-sm mt-1">{errors.adults}</p>}
+            </div>
+
+            <div className="flex-1 bg-white p-4 rounded-lg shadow-sm">
+              <label className="block font-medium text-gray-800 mb-2">Rooms</label>
+              <div className="flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={() => handleDecrement("rooms")}
+                  className="p-2 rounded-full bg-gray-100 hover:bg-gray-200"
+                >
+                  -
+                </button>
+                <span className="text-lg font-medium">{formData.rooms}</span>
+                <button
+                  type="button"
+                  onClick={() => handleIncrement("rooms")}
+                  className="p-2 rounded-full bg-gray-100 hover:bg-gray-200"
+                >
+                  +
+                </button>
               </div>
             </div>
 
-            {/* Room Type Selection */}
-            <div>
+            <div className="flex-1 bg-white p-4 rounded-lg shadow-sm">
               <label className="block font-medium text-gray-800 mb-2">Room Type</label>
               <div className="relative">
                 <BedDouble className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -298,96 +405,27 @@ export default function ReservationPage() {
                   }
                   className={`${inputBaseClasses} pl-10`}
                 >
-                  {roomTypes.map((type) => (
-                    <option key={type.value} value={type.value}>
-                      {type.label} - ${type.rate}/night
+                  {Object.entries(idValues).map(([code, { label, price }]) => (
+                    <option key={code} value={code}>
+                      {code} - {label} (${price}/night)
                     </option>
                   ))}
                 </select>
               </div>
             </div>
+          </div>
 
-            {/* Guest Counts */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Adults */}
-              <div className="bg-white p-6 rounded-lg shadow-sm">
-                <label className="block font-medium text-gray-800 mb-2">Adults</label>
-                <div className="flex items-center justify-between">
-                  <button
-                    type="button"
-                    onClick={() => handleDecrement("adults")}
-                    className="p-2 rounded-full bg-gray-100 hover:bg-gray-200"
-                  >
-                    -
-                  </button>
-                  <span className="text-lg font-medium">{formData.adults}</span>
-                  <button
-                    type="button"
-                    onClick={() => handleIncrement("adults")}
-                    className="p-2 rounded-full bg-gray-100 hover:bg-gray-200"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-
-              {/* Children */}
-              <div className="bg-white p-6 rounded-lg shadow-sm">
-                <label className="block font-medium text-gray-800 mb-2">Children</label>
-                <div className="flex items-center justify-between">
-                  <button
-                    type="button"
-                    onClick={() => handleDecrement("children")}
-                    className="p-2 rounded-full bg-gray-100 hover:bg-gray-200"
-                  >
-                    -
-                  </button>
-                  <span className="text-lg font-medium">{formData.children}</span>
-                  <button
-                    type="button"
-                    onClick={() => handleIncrement("children")}
-                    className="p-2 rounded-full bg-gray-100 hover:bg-gray-200"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-
-              {/* Rooms */}
-              <div className="bg-white p-6 rounded-lg shadow-sm">
-                <label className="block font-medium text-gray-800 mb-2">Rooms</label>
-                <div className="flex items-center justify-between">
-                  <button
-                    type="button"
-                    onClick={() => handleDecrement("rooms")}
-                    className="p-2 rounded-full bg-gray-100 hover:bg-gray-200"
-                  >
-                    -
-                  </button>
-                  <span className="text-lg font-medium">{formData.rooms}</span>
-                  <button
-                    type="button"
-                    onClick={() => handleIncrement("rooms")}
-                    className="p-2 rounded-full bg-gray-100 hover:bg-gray-200"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Submit Button */}
-            <div className="flex justify-center mt-8">
-              <Button
-                type="submit"
-                label="Continue to Book"
-                icon={<CheckCircle className="h-5 w-5" />}
-                disabled={isLoading}
-              />
-            </div>
-          </form>
-        )}
-      </div>
+          {/* Submit Button */}
+          <div className="flex justify-center mt-8">
+            <Button
+              type="submit"
+              label="Continue to Book"
+              icon={<CheckCircle className="h-5 w-5" />}
+              disabled={isLoading}
+            />
+          </div>
+        </form>
+      )}
     </div>
   );
 }

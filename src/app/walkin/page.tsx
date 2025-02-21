@@ -28,6 +28,7 @@ export default function WalkInPage() {
     handleSubmit,
     formState: { errors },
     watch,
+    setValue,
   } = useForm<GuestInfo>();
 
   const [availableRooms, setAvailableRooms] = useState<string[]>([]);
@@ -95,7 +96,7 @@ export default function WalkInPage() {
     <div className="rounded-xl bg-white p-8 shadow-lg ring-1 ring-gray-300 dark:bg-gray-900 dark:ring-gray-700">
       <div className="mb-8 text-center">
         <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-          Guest Registration
+          Walk-In
         </h2>
         <p className="mt-2 text-gray-600 dark:text-gray-400">
           Welcome to our hotel. Please provide guest details below.
@@ -108,21 +109,17 @@ export default function WalkInPage() {
           <h3 className="text-lg font-semibold mb-4">Guest Information</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block font-medium text-gray-800 dark:text-white">
-                Title
-              </label>
+              <label className="block font-medium text-gray-800 dark:text-white">Title</label>
               <select
                 {...register("title", { required: "Title is required" })}
                 className={inputBaseClasses}
               >
                 <option value="">Select Title</option>
-                <option value="Mr">Mr.</option>
-                <option value="Mrs">Mrs.</option>
-                <option value="Ms">Ms.</option>
-                <option value="Dr">Dr.</option>
+                <option value="Mr.">Mr.</option>
+                <option value="Mrs.">Mrs.</option>
+                <option value="Ms.">Ms.</option>
               </select>
             </div>
-
             <div className="md:col-span-2">
               <label className="block font-medium text-gray-800 dark:text-white">
                 Guest Name
@@ -134,6 +131,9 @@ export default function WalkInPage() {
                   placeholder="Enter guest name"
                   {...register("name", { required: "Name is required" })}
                   className={`${inputBaseClasses} pl-10`}
+                  onInput={(e) => {
+                    e.currentTarget.value = e.currentTarget.value.replace(/\b\w/g, (char) => char.toUpperCase());
+                  }}
                 />
               </div>
               {errors.name && (
@@ -183,7 +183,6 @@ export default function WalkInPage() {
                 className={inputBaseClasses}
               >
                 <option value="">Select ID Type</option>
-                <option value="passport">Passport</option>
                 <option value="drivingLicense">Driving License</option>
                 <option value="nationalId">National ID</option>
               </select>
@@ -222,33 +221,64 @@ export default function WalkInPage() {
         {/* Stay Details Section */}
         <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
           <h3 className="text-lg font-semibold mb-4">Stay Details</h3>
-          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block font-medium text-gray-800 dark:text-white">
                 Number of Guests
               </label>
-              <input
-                type="number"
-                min="1"
-                {...register("numberOfGuests", { required: "Number of guests is required" })}
-                className={inputBaseClasses}
-              />
+              <div className="flex items-center">
+                <button
+                  type="button"
+                  onClick={() => setValue("numberOfGuests", Math.max(1, watch("numberOfGuests") - 1))}
+                  className="px-3 py-2 bg-gray-200 rounded-l-lg"
+                >
+                  -
+                </button>
+                <input
+                  type="number"
+                  min="1"
+                  {...register("numberOfGuests", { required: "Number of guests is required" })}
+                  className="w-16 text-center border-t border-b border-gray-300"
+                />
+                <button
+                  type="button"
+                  onClick={() => setValue("numberOfGuests", watch("numberOfGuests") + 1)}
+                  className="px-3 py-2 bg-gray-200 rounded-r-lg"
+                >
+                  +
+                </button>
+              </div>
             </div>
             <div>
               <label className="block font-medium text-gray-800 dark:text-white">
                 Number of Nights
               </label>
-              <input
-                type="number"
-                min="1"
-                {...register("stayDuration", { required: "Stay duration is required" })}
-                className={inputBaseClasses}
-              />
+              <div className="flex items-center">
+                <button
+                  type="button"
+                  onClick={() => setValue("stayDuration", Math.max(1, watch("stayDuration") - 1))}
+                  className="px-3 py-2 bg-gray-200 rounded-l-lg"
+                >
+                  -
+                </button>
+                <input
+                  type="number"
+                  min="1"
+                  {...register("stayDuration", { required: "Stay duration is required" })}
+                  className="w-16 text-center border-t border-b border-gray-300"
+                />
+                <button
+                  type="button"
+                  onClick={() => setValue("stayDuration", watch("stayDuration") + 1)}
+                  className="px-3 py-2 bg-gray-200 rounded-r-lg"
+                >
+                  +
+                </button>
+              </div>
             </div>
           </div>
 
-          <div>
+          <div className="mt-4">
             <label className="block font-medium text-gray-800 dark:text-white">
               Room Type
             </label>
@@ -269,7 +299,7 @@ export default function WalkInPage() {
           </div>
 
           {availableRooms.length > 0 && (
-            <div className="bg-blue-50 p-4 rounded-lg">
+            <div className="bg-blue-50 p-4 rounded-lg mt-4">
               <label className="block font-medium text-gray-800 dark:text-white">
                 Available Rooms
               </label>
@@ -282,7 +312,7 @@ export default function WalkInPage() {
           )}
 
           {selectedRate && (
-            <div className="bg-blue-50 p-4 rounded-lg">
+            <div className="bg-blue-50 p-4 rounded-lg mt-4">
               <label className="block font-medium text-gray-800 dark:text-white">
                 Room Rate
               </label>
@@ -295,42 +325,45 @@ export default function WalkInPage() {
 
         {/* Payment Section */}
         <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-          <h3 className="text-lg font-semibold mb-4">Payment Details</h3>
+          <h3 className="text-lg font-semibold mb-4">Payment Method</h3>
           <div>
-            <label className="block font-medium text-gray-800 dark:text-white">
-              Payment Method
-            </label>
-            <select
-              {...register("paymentMethod", {
-                required: "Payment method is required",
-              })}
-              className={inputBaseClasses}
-            >
-              <option value="">Select Payment Method</option>
-              <option value="creditCard">Credit Card</option>
-              <option value="cash">Cash</option>
-            </select>
-            {errors.paymentMethod && (
-              <span className="text-red-500">{errors.paymentMethod.message}</span>
-            )}
+            <div className="flex items-center gap-4">
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  value="creditCard"
+                  {...register("paymentMethod", { required: "Payment method is required" })}
+                />
+                <CreditCard className="w-5 h-5 text-gray-400" />
+                <span>Credit Card</span>
+              </label>
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  value="cash"
+                  {...register("paymentMethod")}
+                />
+                <span>Cash</span>
+              </label>
+            </div>
           </div>
-        </div>
-
-        {/* Special Requests Section */}
-        <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-          <h3 className="text-lg font-semibold mb-4">Special Requests</h3>
-          <textarea
-            {...register("specialRequests")}
-            placeholder="Enter any special requests or preferences"
-            className={`${inputBaseClasses} h-24`}
-          />
+          {selectedRate && watch("stayDuration") && (
+            <div className="mt-4">
+              <label className="block font-medium text-gray-800 dark:text-white">
+                Total Cost
+              </label>
+              <div className="text-lg font-semibold text-green-600 dark:text-green-400">
+                ${selectedRate * watch("stayDuration")}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="flex justify-center">
-          <Button 
-            type="submit" 
-            disabled={isProcessing} 
-            label={isProcessing ? "Processing..." : "Complete Registration"}
+          <Button
+            type="submit"
+            disabled={isProcessing}
+            label={isProcessing ? "Processing..." : "Complete Walk-In"}
           />
         </div>
       </form>
