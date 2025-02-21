@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui-elements/button";
-import { User, Calendar, BedDouble, CheckCircle } from "lucide-react";
+import { User, Calendar, BedDouble, CheckCircle, Hash, Key } from "lucide-react";
 import { roomTypes } from "@/data/data"; // Ensure data is imported
 
 export default function ReservationPage() {
@@ -43,6 +43,16 @@ export default function ReservationPage() {
     return Object.keys(newErrors).length === 0;
   };
 
+  // Add new helper function to generate confirmation number
+  const generateConfirmationNumber = () => {
+    return Math.floor(40000000 + Math.random() * 9999999).toString();
+  };
+
+  // Add new helper function to generate room number
+  const generateRoomNumber = () => {
+    return (Math.floor(100 + Math.random() * 900)).toString().slice(0, 3);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -57,6 +67,10 @@ export default function ReservationPage() {
       return;
     }
 
+    // Generate confirmation number and room number
+    const confirmationNumber = generateConfirmationNumber();
+    const roomNumber = generateRoomNumber();
+
     // Calculate total cost
     const selectedRoom = roomTypes.find((room) => room.value === formData.roomType);
     const nights = Math.ceil(
@@ -64,8 +78,10 @@ export default function ReservationPage() {
     );
     const totalCost = selectedRoom ? selectedRoom.rate * nights * formData.rooms : 0;
 
-    // Set booking summary
+    // Set booking summary with new fields
     setBookingSummary({
+      confirmationNumber,
+      roomNumber,
       profileName: formData.profileName,
       arrivalDate: formData.arrivalDate,
       departureDate: formData.departureDate,
@@ -75,6 +91,20 @@ export default function ReservationPage() {
       rooms: formData.rooms,
       totalCost: totalCost.toFixed(2),
     });
+
+    // Update the bookingData array (assuming it's imported from @/data/data)
+    const newBooking = {
+      confirmationNumber,
+      profileName: formData.profileName,
+      roomType: selectedRoom?.label || "",
+      roomNumber,
+      checkInDate: formData.arrivalDate,
+    };
+
+    // You'll need to implement a way to update the bookingData
+    // This could be through a context, Redux store, or API call
+    // For now, we'll just log it
+    console.log("New booking to be added:", newBooking);
 
     setIsLoading(false);
   };
@@ -117,25 +147,88 @@ export default function ReservationPage() {
         </div>
 
         {bookingSummary ? (
-          <div className="space-y-6">
-            <h3 className="text-2xl font-bold text-gray-900">Booking Summary</h3>
-            <div className="space-y-4">
-              <p><strong>Guest Name:</strong> {bookingSummary.profileName}</p>
-              <p><strong>Arrival Date:</strong> {bookingSummary.arrivalDate}</p>
-              <p><strong>Departure Date:</strong> {bookingSummary.departureDate}</p>
-              <p><strong>Room Type:</strong> {bookingSummary.roomType}</p>
-              <p><strong>Adults:</strong> {bookingSummary.adults}</p>
-              <p><strong>Children:</strong> {bookingSummary.children}</p>
-              <p><strong>Rooms:</strong> {bookingSummary.rooms}</p>
-              <p><strong>Total Cost:</strong> ${bookingSummary.totalCost}</p>
+          <div className="space-y-8 animate-fadeIn">
+            <div className="flex items-center space-x-4 pb-6 border-b border-gray-100">
+              <div className="p-3 bg-[#5750F1]/10 rounded-full">
+                <CheckCircle className="h-6 w-6 text-[#5750F1]" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900">Booking Summary</h3>
             </div>
-            <div className="flex justify-center">
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Primary Details Card */}
+              <div className="bg-gray-50 rounded-xl p-6 space-y-4">
+                <div className="flex items-center space-x-3">
+                  <Hash className="h-5 w-5 text-[#5750F1]" />
+                  <div>
+                    <p className="text-sm text-gray-500">Confirmation Number</p>
+                    <p className="font-semibold text-gray-900">{bookingSummary.confirmationNumber}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-3">
+                  <Key className="h-5 w-5 text-[#5750F1]" />
+                  <div>
+                    <p className="text-sm text-gray-500">Room Number</p>
+                    <p className="font-semibold text-gray-900">{bookingSummary.roomNumber}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-3">
+                  <User className="h-5 w-5 text-[#5750F1]" />
+                  <div>
+                    <p className="text-sm text-gray-500">Guest Name</p>
+                    <p className="font-semibold text-gray-900">{bookingSummary.profileName}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-3">
+                  <Calendar className="h-5 w-5 text-[#5750F1]" />
+                  <div>
+                    <div className="space-y-1">
+                      <div>
+                        <p className="text-sm text-gray-500">Check-in</p>
+                        <p className="font-semibold text-gray-900">{bookingSummary.arrivalDate}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500">Check-out</p>
+                        <p className="font-semibold text-gray-900">{bookingSummary.departureDate}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Secondary Details Card */}
+              <div className="bg-gray-50 rounded-xl p-6 space-y-4">
+                <div className="flex items-center space-x-3">
+                  <BedDouble className="h-5 w-5 text-[#5750F1]" />
+                  <div>
+                    <p className="text-sm text-gray-500">Room Details</p>
+                    <p className="font-semibold text-gray-900">{bookingSummary.roomType}</p>
+                    <p className="text-sm text-gray-600">
+                      {bookingSummary.rooms} {bookingSummary.rooms === 1 ? 'room' : 'rooms'} · 
+                      {bookingSummary.adults} {bookingSummary.adults === 1 ? 'adult' : 'adults'} · 
+                      {bookingSummary.children} {bookingSummary.children === 1 ? 'child' : 'children'}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-4 pt-4 border-t border-gray-200">
+                  <p className="text-sm text-gray-500">Total Cost</p>
+                  <p className="text-2xl font-bold text-[#5750F1]">${bookingSummary.totalCost}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-center pt-6">
               <Button
                 type="button"
                 label="Confirm and Pay"
                 icon={<CheckCircle className="h-5 w-5" />}
                 onClick={handlePayment}
                 disabled={isLoading}
+                className="bg-[#5750F1] hover:bg-[#4740E1] transform transition-transform hover:scale-105"
               />
             </div>
           </div>
