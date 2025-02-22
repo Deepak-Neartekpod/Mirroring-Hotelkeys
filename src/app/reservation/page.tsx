@@ -8,6 +8,7 @@ import { idValues } from "@/data/data";
 export default function ReservationPage() {
   const [formData, setFormData] = useState({
     profileName: "",
+    email: "",
     adults: 1,
     rooms: 1,
     roomType: Object.keys(idValues)[0],
@@ -39,6 +40,16 @@ export default function ReservationPage() {
     // Only allow letters and spaces
     if (value === '' || /^[A-Za-z\s]*$/.test(value)) {
       setFormData((prev) => ({ ...prev, profileName: value }));
+    }
+  };
+
+  // Add this function to handle email input validation
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (value === '' || emailRegex.test(value)) {
+      setFormData((prev) => ({ ...prev, email: value }));
     }
   };
 
@@ -91,13 +102,24 @@ export default function ReservationPage() {
       newErrors.roomType = "Please select a valid room type.";
     }
 
+    // Email validation
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "Please enter a valid email address.";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   // Add new helper function to generate confirmation number
   const generateConfirmationNumber = () => {
-    return Math.floor(40000000 + Math.random() * 9999999).toString();
+    let confirmationNumber;
+    do {
+      confirmationNumber = Math.floor(10000000 + Math.random() * 89999999).toString();
+    } while (confirmationNumber.startsWith('4'));
+    return confirmationNumber;
   };
 
   // Add new helper function to generate room number
@@ -133,6 +155,7 @@ export default function ReservationPage() {
       confirmationNumber: generateConfirmationNumber(),
       roomNumber: generateRoomNumber(),
       profileName: formData.profileName,
+      email: formData.email,
       arrivalDate: formData.arrivalDate,
       departureDate: formData.departureDate,
       roomType: selectedRoom?.label,
@@ -169,6 +192,7 @@ export default function ReservationPage() {
       setBookingSummary(null); // Reset form after successful booking
       setFormData({
         profileName: "",
+        email: "",
         adults: 1,
         rooms: 1,
         roomType: Object.keys(idValues)[0],
@@ -208,6 +232,7 @@ export default function ReservationPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Primary Details Card */}
             <div className="bg-gray-50 rounded-xl p-6 space-y-4">
+              <h3 className="text-lg font-bold text-gray-900">Booking Details</h3>
               <div className="flex items-center space-x-3">
                 <Hash className="h-5 w-5 text-[#5750F1]" />
                 <div>
@@ -231,41 +256,48 @@ export default function ReservationPage() {
                   <p className="font-semibold text-gray-900">{bookingSummary.profileName}</p>
                 </div>
               </div>
-              
+
               <div className="flex items-center space-x-3">
-                <Calendar className="h-5 w-5 text-[#5750F1]" />
+                <User className="h-5 w-5 text-[#5750F1]" />
                 <div>
-                  <div className="space-y-1">
-                    <div>
-                      <p className="text-sm text-gray-500">Check-in</p>
-                      <p className="font-semibold text-gray-900">{bookingSummary.arrivalDate}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500">Check-out</p>
-                      <p className="font-semibold text-gray-900">{bookingSummary.departureDate}</p>
-                    </div>
-                  </div>
+                  <p className="text-sm text-gray-500">Guest Email</p>
+                  <p className="font-semibold text-gray-900">{bookingSummary.email}</p>
                 </div>
               </div>
             </div>
 
             {/* Secondary Details Card */}
             <div className="bg-gray-50 rounded-xl p-6 space-y-4">
+              <h3 className="text-lg font-bold text-gray-900">Stay Details</h3>
               <div className="flex items-center space-x-3">
-                <BedDouble className="h-5 w-5 text-[#5750F1]" />
+                <Calendar className="h-5 w-5 text-[#5750F1]" />
                 <div>
-                  <p className="text-sm text-gray-500">Room Details</p>
-                  <p className="font-semibold text-gray-900">{bookingSummary.roomType}</p>
-                  <p className="text-sm text-gray-600">
-                    {bookingSummary.rooms} {bookingSummary.rooms === 1 ? 'room' : 'rooms'} · 
-                    {bookingSummary.adults} {bookingSummary.adults === 1 ? 'adult' : 'adults'}
-                  </p>
+                  <p className="text-sm text-gray-500">Check-in</p>
+                  <p className="font-semibold text-gray-900">{bookingSummary.arrivalDate}</p>
                 </div>
               </div>
 
-              <div className="mt-4 pt-4 border-t border-gray-200">
-                <p className="text-sm text-gray-500">Total Cost</p>
-                <p className="text-2xl font-bold text-[#5750F1]">${bookingSummary.totalCost}</p>
+              <div className="flex items-center space-x-3">
+                <Calendar className="h-5 w-5 text-[#5750F1]" />
+                <div>
+                  <p className="text-sm text-gray-500">Check-out</p>
+                  <p className="font-semibold text-gray-900">{bookingSummary.departureDate}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-3">
+                <BedDouble className="h-5 w-5 text-[#5750F1]" />
+                <div>
+                  <p className="text-sm text-gray-500">Room Type</p>
+                  <p className="font-semibold text-gray-900">{bookingSummary.roomType}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-3">
+                <div>
+                  <p className="text-sm text-gray-500">Total Cost</p>
+                  <p className="text-2xl font-bold text-[#5750F1]">${bookingSummary.totalCost}</p>
+                </div>
               </div>
             </div>
           </div>
@@ -273,7 +305,7 @@ export default function ReservationPage() {
           <div className="flex justify-center pt-6">
             <Button
               type="button"
-              label="Confirm and Pay"
+              label="Confirm Reservation"
               icon={<CheckCircle className="h-5 w-5" />}
               onClick={handlePayment}
               disabled={isLoading}
@@ -283,20 +315,36 @@ export default function ReservationPage() {
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-8">
-          {/* Guest Name */}
-          <div>
-            <label className="block font-medium text-gray-800 mb-2">Guest Name</label>
-            <div className="relative">
-              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Enter guest name"
-                value={formData.profileName}
-                onChange={handleNameChange}
-                className={`${inputBaseClasses} pl-10`}
-              />
+          {/* Guest Name and Email in one row */}
+          <div className="flex gap-4">
+            <div className="flex-1">
+              <label className="block font-medium text-gray-800 mb-2">Guest Name</label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Enter guest name"
+                  value={formData.profileName}
+                  onChange={handleNameChange}
+                  className={`${inputBaseClasses} pl-10`}
+                />
+              </div>
+              {errors.profileName && <p className="text-red-500 text-sm mt-1">{errors.profileName}</p>}
             </div>
-            {errors.profileName && <p className="text-red-500 text-sm mt-1">{errors.profileName}</p>}
+
+            <div className="flex-1">
+              <label className="block font-medium text-gray-800 mb-2">Guest Email</label>
+              <div className="relative">
+                <input
+                  type="email"
+                  placeholder="Enter guest email"
+                  value={formData.email}
+                  onChange={handleEmailChange}
+                  className={`${inputBaseClasses}`}
+                />
+              </div>
+              {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+            </div>
           </div>
 
           {/* Dates in one row */}
