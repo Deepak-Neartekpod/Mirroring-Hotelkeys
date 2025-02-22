@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation"; // Import useRouter
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui-elements/button";
 
 export default function CheckIn() {
@@ -9,10 +9,12 @@ export default function CheckIn() {
   const [confirmationNumber, setConfirmationNumber] = useState("");
   const [roomType, setRoomType] = useState("");
   const [roomNumber, setRoomNumber] = useState("");
-  const [checkInDate, setCheckInDate] = useState(""); // New state for check-in date
-  const [successMessage, setSuccessMessage] = useState(""); // New state for success message
-  
-  const router = useRouter(); // Initialize router
+  const [checkInDate, setCheckInDate] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [isCheckedIn, setIsCheckedIn] = useState(false); // New state to track check-in
+  const [status, setStatus] = useState(""); // State to track reservation status
+
+  const router = useRouter();
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -21,35 +23,50 @@ export default function CheckIn() {
     setRoomType(urlParams.get("roomType") || "");
     setRoomNumber(urlParams.get("roomNumber") || "");
 
-    // Initialize check-in date to current date before the user clicks the button
-    const currentDate = new Date().toLocaleDateString(); // Get current date in 'MM/DD/YYYY' format
-    setCheckInDate(currentDate); // Set the current date as check-in date
-  }, []);
+    // Get current date in YYYY-MM-DD format
+    const currentDate = new Date().toISOString().split("T")[0]; 
+    setCheckInDate(currentDate);
+
+    // Determine the initial status
+    setStatus(getStatus(currentDate, isCheckedIn));
+  }, [isCheckedIn]); // Recalculate status when check-in changes
 
   const handleCheckIn = () => {
-    // Show the success message when the button is clicked
+    setIsCheckedIn(true); // Mark as checked-in
     setSuccessMessage("Check-In successful!");
 
-    // Redirect to the check-in page after 1 second
+    // Redirect to check-in page after 1 second
     setTimeout(() => {
       router.push("/checkin");
     }, 1000);
+  };
+
+  // Function to determine the status
+  const getStatus = (reservationDate: string, isCheckedIn: boolean) => {
+    const today = new Date().toISOString().split("T")[0]; 
+
+    if (reservationDate === today) {
+      return isCheckedIn ? "Inhouse" : "Arrival"; 
+    }
+    if (reservationDate < today) {
+      return "No Show"; 
+    }
+    return "Reserved"; 
   };
 
   return (
     <div className="bg-gray-100 dark:bg-gray-900 min-h-screen p-8">
       {/* Header */}
       <div className="flex flex-col md:flex-row items-center justify-between">
-  <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
-    Check-In
-  </h1>
-  <Button
-    label="Complete Check-In"
-    onClick={handleCheckIn}
-    className="bg-[#5750F1] hover:bg-[#4940D3] text-white font-semibold px-6 py-2 rounded-lg shadow-md"
-  />
-</div>
-
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
+          Check-In
+        </h1>
+        <Button
+          label="Complete Check-In"
+          onClick={handleCheckIn}
+          className="bg-[#5750F1] hover:bg-[#4940D3] text-white font-semibold px-6 py-2 rounded-lg shadow-md"
+        />
+      </div>
 
       {/* Success Message */}
       {successMessage && (
@@ -57,6 +74,11 @@ export default function CheckIn() {
           {successMessage}
         </div>
       )}
+
+      {/* Status Display */}
+      <div className="mt-4 p-4 bg-blue-500 text-white rounded-md">
+        <h2 className="text-lg font-semibold">Status: {status}</h2>
+      </div>
 
       {/* Form Section */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
