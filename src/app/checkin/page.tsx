@@ -11,6 +11,7 @@ export default function SearchReservations() {
   const [currentView, setCurrentView] = useState("list");
   const [reservations, setReservations] = useState(bookingData);
 
+  // Set current date on component mount
   useEffect(() => {
     const today = new Date();
     const formattedDate = today.toLocaleDateString("en-US", {
@@ -22,6 +23,7 @@ export default function SearchReservations() {
     setCurrentDate(formattedDate);
   }, []);
 
+  // Filter reservations based on search input
   useEffect(() => {
     const input = searchInput.trim();
     setFilteredData(
@@ -33,10 +35,12 @@ export default function SearchReservations() {
     );
   }, [searchInput, reservations]);
 
+  // Switch between views (list, room, tape)
   const switchView = (view: string) => {
     setCurrentView(view);
   };
 
+  // Get reservation status based on check-in date
   const getStatus = (reservation: any) => {
     const reservationDate = new Date(reservation.checkInDate);
     const today = new Date();
@@ -52,6 +56,7 @@ export default function SearchReservations() {
     return "Reserved";
   };
 
+  // Handle check-in action
   const handleCheckIn = (reservation: any) => {
     const status = getStatus(reservation);
 
@@ -61,7 +66,7 @@ export default function SearchReservations() {
     }
   };
 
-  // Updated Room View UI
+  // Render Room View
   const renderRoomView = () => {
     const groupedByRoomType = reservations.reduce((acc, reservation) => {
       if (!acc[reservation.roomType]) {
@@ -115,14 +120,19 @@ export default function SearchReservations() {
     );
   };
 
-  // Updated Tape Chart UI
+  // Render Modernized Tape Chart
   const renderTapeChart = () => {
     const roomNumbers = Array.from(
       new Set(reservations.map((reservation) => reservation.roomNumber))
-    );
-    const dates = Array.from(
-      new Set(reservations.map((reservation) => reservation.checkInDate))
-    ).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+    ).sort((a, b) => a - b); // Sort room numbers in ascending order
+
+    // Generate a full month of dates
+    const startDate = new Date(); // Start from today
+    const endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0); // End of the month
+    const dates = [];
+    for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
+      dates.push(new Date(d).toISOString().split('T')[0]); // Push formatted date
+    }
 
     return (
       <div className="overflow-x-auto">
@@ -151,16 +161,17 @@ export default function SearchReservations() {
                   (res) =>
                     res.roomNumber === roomNumber && res.checkInDate === date
                 );
+                const status = reservation ? getStatus(reservation) : "Available";
                 return (
                   <div
                     key={index}
-                    className={`col-span-1 h-12 rounded-lg flex items-center justify-center ${
-                      reservation
-                        ? getStatus(reservation) === "Arrival"
-                          ? "bg-green-100 text-green-800"
-                          : getStatus(reservation) === "No Show"
-                          ? "bg-red-100 text-red-800"
-                          : "bg-blue-100 text-blue-800"
+                    className={`col-span-1 h-12 rounded-lg flex items-center justify-center text-sm font-medium ${
+                      status === "Arrival"
+                        ? "bg-green-100 text-green-800"
+                        : status === "No Show"
+                        ? "bg-red-100 text-red-800"
+                        : status === "Reserved"
+                        ? "bg-blue-100 text-blue-800"
                         : "bg-gray-100 text-gray-500"
                     }`}
                   >
