@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui-elements/button";
 import { User, Calendar, BedDouble, CheckCircle, Hash, Key } from "lucide-react";
 import { idValues } from "@/data/data";
@@ -22,6 +22,9 @@ export default function ReservationPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [bookingSummary, setBookingSummary] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const arrivalDateRef = useRef<HTMLInputElement>(null);
+  const departureDateRef = useRef<HTMLInputElement>(null);
 
   const handleIncrement = (field: string) => {
     setFormData((prev) => ({ ...prev, [field]: prev[field] + 1 }));
@@ -352,17 +355,14 @@ export default function ReservationPage() {
             <div className="flex-1">
               <label className="block font-medium text-gray-800 mb-2">Check-In Date</label>
               <div className="relative">
-                <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
-                  type="date"
-                  value={formData.arrivalDate}
-                  onChange={(e) => {
-                    const newArrivalDate = e.target.value;
-                    setFormData((prev) => ({ ...prev, arrivalDate: newArrivalDate }));
-                    setNights(calculateNights(newArrivalDate, formData.departureDate));
-                  }}
-                  className={`${inputBaseClasses} pl-10`}
-                />
+  type="date"
+  id="arrivalDate"
+  value={formData.arrivalDate}
+  onChange={(e) => setFormData((prev) => ({ ...prev, arrivalDate: e.target.value }))}
+  onFocus={(e) => e.target.showPicker()} // Opens the date picker when clicked
+  className={inputBaseClasses}
+/>
               </div>
               {errors.arrivalDate && <p className="text-red-500 text-sm mt-1">{errors.arrivalDate}</p>}
             </div>
@@ -370,17 +370,15 @@ export default function ReservationPage() {
             <div className="flex-1">
               <label className="block font-medium text-gray-800 mb-2">Check-out Date</label>
               <div className="relative">
-                <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+
                 <input
-                  type="date"
-                  value={formData.departureDate}
-                  onChange={(e) => {
-                    const newDepartureDate = e.target.value;
-                    setFormData((prev) => ({ ...prev, departureDate: newDepartureDate }));
-                    setNights(calculateNights(formData.arrivalDate, newDepartureDate));
-                  }}
-                  className={`${inputBaseClasses} pl-10`}
-                />
+  type="date"
+  id="departureDate"
+  value={formData.departureDate}
+  onChange={(e) => setFormData((prev) => ({ ...prev, departureDate: e.target.value }))}
+  onFocus={(e) => e.target.showPicker()} // Opens the date picker when clicked
+  className={inputBaseClasses}
+/>
               </div>
               {errors.departureDate && <p className="text-red-500 text-sm mt-1">{errors.departureDate}</p>}
             </div>

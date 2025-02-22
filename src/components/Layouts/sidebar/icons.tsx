@@ -92,6 +92,22 @@ export function ReportsIcon(props: PropsType) {
   );
 }
 
+export function HousekeepingIcon(props: PropsType) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={24}
+      height={24}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      {...props}
+    >
+      <path d="M5 2a1 1 0 011-1h4a1 1 0 011 1v2h2V2a1 1 0 011-1h4a1 1 0 011 1v6h-2V4h-2v6h-2V4h-2v6h-2V4H8v6H6V2zm14 9a1 1 0 011 1v5h2v2h-2v3a1 1 0 01-2 0v-3h-2v3a1 1 0 01-2 0v-3H6v3a1 1 0 01-2 0v-3H2v-2h2v-5a1 1 0 011-1h14zm-1 2H6v4h12v-4z" />
+    </svg>
+  );
+}
+
+
 const Icons = () => {
   return <div className="icons">{/* Icon content */}</div>;
 };

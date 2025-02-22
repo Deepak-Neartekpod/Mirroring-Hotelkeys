@@ -40,21 +40,21 @@ export default function SearchReservations() {
     setCurrentView(view);
   };
 
-  // Get reservation status based on check-in date
-  const getStatus = (reservation: any) => {
+  const getStatus = (reservation: any, isCheckedIn: boolean) => {
     const reservationDate = new Date(reservation.checkInDate);
     const today = new Date();
-
+  
     if (today.toDateString() === reservationDate.toDateString()) {
-      return "Arrival";
+      return isCheckedIn ? "Inhouse" : "Arrival"; // If check-in is today, update to "Inhouse" on check-in
     }
-
+  
     if (today > reservationDate) {
-      return "No Show";
+      return "No Show"; // If check-in date is in the past
     }
-
-    return "Reserved";
+  
+    return "Reserved"; // If check-in date is in the future
   };
+  
 
   // Handle check-in action
   const handleCheckIn = (reservation: any) => {

@@ -10,9 +10,9 @@ export const NAV_DATA: Section[] = [
         icon: Icons.ReservationIcon,
       },
       {
-        title: "Check-In",
-        url: "/checkin",
-        icon: Icons.CheckInIcon,
+        title: "Availability",
+        url: "/availability",
+        icon: Icons.AvailabilityIcon,
       },
       {
         title: "Walk-In",
@@ -20,14 +20,19 @@ export const NAV_DATA: Section[] = [
         icon: Icons.WalkInIcon,
       },
       {
+        title: "Check-In",
+        url: "/checkin",
+        icon: Icons.CheckInIcon,
+      },
+      {
+        title: "Housekeeping",
+        url: "/housekeeping",
+        icon: Icons.HousekeepingIcon,
+      },
+      {
         title: "Check-Out",
         url: "/checkout",
         icon: Icons.CheckOutIcon,
-      },
-      {
-        title: "Availability",
-        url: "/availability",
-        icon: Icons.AvailabilityIcon,
       },
       {
         title: "Reports",
